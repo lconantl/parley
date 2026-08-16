@@ -1,4 +1,5 @@
 #include "TelegramExportParser.hpp"
+#include <charconv>
 #include <fstream>
 #include <stdexcept>
 #include <unordered_set>
@@ -21,6 +22,14 @@ void AssertIsFileOpen(const bool isOpen)
 	}
 }
 
+void AssertIsMessagesArrayExists(const bool exists)
+{
+	if (!exists)
+	{
+		throw std::runtime_error("Массив 'messages' не найден в корневом объекте JSON");
+	}
+}
+
 nlohmann::json ReadJsonFromFile(const std::filesystem::path& path)
 {
 	std::ifstream file(path);
@@ -36,12 +45,50 @@ nlohmann::json ReadJsonFromFile(const std::filesystem::path& path)
 	}
 }
 
-void AssertIsMessagesArrayExists(const bool exists)
+template <typename T>
+std::optional<T> ExtractValue(const nlohmann::json& node, std::string_view key)
 {
-	if (!exists)
+	if (!node.contains(key) || node[key].is_null())
 	{
-		throw std::runtime_error("Массив 'messages' не найден в корневом объекте JSON");
+		return std::nullopt;
 	}
+
+	if constexpr (std::is_same_v<T, std::string>)
+	{
+		if (node[key].is_string())
+		{
+			return node[key].get<std::string>();
+		}
+		if (node[key].is_number())
+		{
+			return std::to_string(node[key].get<int64_t>());
+		}
+	}
+	else if constexpr (std::is_same_v<T, int64_t>)
+	{
+		if (node[key].is_number())
+		{
+			return node[key].get<int64_t>();
+		}
+		if (node[key].is_string())
+		{
+			int64_t result = 0;
+			const auto& str = node[key].get_ref<const std::string&>();
+			if (auto [ptr, ec] = std::from_chars(str.data(), str.data() + str.size(), result); ec == std::errc{})
+			{
+				return result;
+			}
+		}
+	}
+	else if constexpr (std::is_same_v<T, bool>)
+	{
+		if (node[key].is_boolean())
+		{
+			return node[key].get<bool>();
+		}
+	}
+
+	return std::nullopt;
 }
 
 const std::unordered_set<std::string>& GetKnownFields()
@@ -51,69 +98,31 @@ const std::unordered_set<std::string>& GetKnownFields()
 	return fields;
 }
 
-std::optional<std::string> ExtractString(const nlohmann::json& node, const std::string& key)
-{
-	if (node.contains(key) && node[key].is_string())
-	{
-		return node[key].get<std::string>();
-	}
-	return std::nullopt;
-}
-
-std::optional<int64_t> ExtractInt64(const nlohmann::json& node, const std::string& key)
-{
-	if (node.contains(key) && node[key].is_number())
-	{
-		return node[key].get<int64_t>();
-	}
-	if (node.contains(key) && node[key].is_string())
-	{
-		try
-		{
-			return std::stoll(node[key].get<std::string>());
-		}
-		catch (...)
-		{
-			return std::nullopt;
-		}
-	}
-	return std::nullopt;
-}
-
-std::optional<bool> ExtractBool(const nlohmann::json& node, const std::string& key)
-{
-	if (node.contains(key) && node[key].is_boolean())
-	{
-		return node[key].get<bool>();
-	}
-	return std::nullopt;
-}
-
 void ParseBaseMetadata(const nlohmann::json& node, RawMessage& message)
 {
-	message.id = ExtractInt64(node, "id");
-	message.type = ExtractString(node, "type");
-	message.date = ExtractString(node, "date");
-	message.dateUnixtime = ExtractString(node, "date_unixtime");
-	message.edited = ExtractString(node, "edited");
-	message.editedUnixtime = ExtractString(node, "edited_unixtime");
+	message.id = ExtractValue<int64_t>(node, "id");
+	message.type = ExtractValue<std::string>(node, "type");
+	message.date = ExtractValue<std::string>(node, "date");
+	message.dateUnixtime = ExtractValue<std::string>(node, "date_unixtime");
+	message.edited = ExtractValue<std::string>(node, "edited");
+	message.editedUnixtime = ExtractValue<std::string>(node, "edited_unixtime");
 }
 
 void ParseSenderMetadata(const nlohmann::json& node, RawMessage& message)
 {
-	message.from = ExtractString(node, "from");
-	message.fromId = ExtractString(node, "from_id");
-	message.actor = ExtractString(node, "actor");
-	message.actorId = ExtractString(node, "actor_id");
-	message.action = ExtractString(node, "action");
-	message.forwardedFrom = ExtractString(node, "forwarded_from");
-	message.forwardedFromId = ExtractString(node, "forwarded_from_id");
+	message.from = ExtractValue<std::string>(node, "from");
+	message.fromId = ExtractValue<std::string>(node, "from_id");
+	message.actor = ExtractValue<std::string>(node, "actor");
+	message.actorId = ExtractValue<std::string>(node, "actor_id");
+	message.action = ExtractValue<std::string>(node, "action");
+	message.forwardedFrom = ExtractValue<std::string>(node, "forwarded_from");
+	message.forwardedFromId = ExtractValue<std::string>(node, "forwarded_from_id");
 }
 
 void ParseRelationsMetadata(const nlohmann::json& node, RawMessage& message)
 {
-	message.replyToMessageId = ExtractInt64(node, "reply_to_message_id");
-	message.replyToPeerId = ExtractString(node, "reply_to_peer_id");
+	message.replyToMessageId = ExtractValue<int64_t>(node, "reply_to_message_id");
+	message.replyToPeerId = ExtractValue<std::string>(node, "reply_to_peer_id");
 }
 
 void ParseTextEntities(const nlohmann::json& node, RawMessage& message)
@@ -126,55 +135,44 @@ void ParseTextEntities(const nlohmann::json& node, RawMessage& message)
 	for (const auto& entityNode : node["text_entities"])
 	{
 		TextEntity entity;
-		entity.type = ExtractString(entityNode, "type").value_or("");
-		entity.text = ExtractString(entityNode, "text").value_or("");
-		entity.href = ExtractString(entityNode, "href");
-		entity.documentId = ExtractString(entityNode, "document_id");
-		message.textEntities.push_back(entity);
+		entity.type = ExtractValue<std::string>(entityNode, "type").value_or("");
+		entity.text = ExtractValue<std::string>(entityNode, "text").value_or("");
+		entity.href = ExtractValue<std::string>(entityNode, "href");
+		entity.documentId = ExtractValue<std::string>(entityNode, "document_id");
+		message.textEntities.push_back(std::move(entity));
 	}
-}
-
-void ParseTextMetadata(const nlohmann::json& node, RawMessage& message)
-{
-	if (node.contains("text"))
-	{
-		message.text = node["text"];
-	}
-	ParseTextEntities(node, message);
 }
 
 void ParseMediaMetadata(const nlohmann::json& node, RawMessage& message)
 {
-	message.photo = ExtractString(node, "photo");
-	message.photoFileSize = ExtractInt64(node, "photo_file_size");
-	message.width = ExtractInt64(node, "width");
-	message.height = ExtractInt64(node, "height");
-
-	message.file = ExtractString(node, "file");
-	message.fileName = ExtractString(node, "file_name");
-	message.fileSize = ExtractInt64(node, "file_size");
-	message.mimeType = ExtractString(node, "mime_type");
-	message.thumbnail = ExtractString(node, "thumbnail");
-	message.thumbnailFileSize = ExtractInt64(node, "thumbnail_file_size");
-
-	message.mediaType = ExtractString(node, "media_type");
-	message.durationSeconds = ExtractInt64(node, "duration_seconds");
-	message.mediaSpoiler = ExtractBool(node, "media_spoiler");
+	message.photo = ExtractValue<std::string>(node, "photo");
+	message.photoFileSize = ExtractValue<int64_t>(node, "photo_file_size");
+	message.width = ExtractValue<int64_t>(node, "width");
+	message.height = ExtractValue<int64_t>(node, "height");
+	message.file = ExtractValue<std::string>(node, "file");
+	message.fileName = ExtractValue<std::string>(node, "file_name");
+	message.fileSize = ExtractValue<int64_t>(node, "file_size");
+	message.mimeType = ExtractValue<std::string>(node, "mime_type");
+	message.thumbnail = ExtractValue<std::string>(node, "thumbnail");
+	message.thumbnailFileSize = ExtractValue<int64_t>(node, "thumbnail_file_size");
+	message.mediaType = ExtractValue<std::string>(node, "media_type");
+	message.durationSeconds = ExtractValue<int64_t>(node, "duration_seconds");
+	message.mediaSpoiler = ExtractValue<bool>(node, "media_spoiler");
 }
 
 void ParseContactMetadata(const nlohmann::json& node, RawMessage& message)
 {
-	message.contactVcard = ExtractString(node, "contact_vcard");
-	message.contactVcardFileSize = ExtractInt64(node, "contact_vcard_file_size");
+	message.contactVcard = ExtractValue<std::string>(node, "contact_vcard");
+	message.contactVcardFileSize = ExtractValue<int64_t>(node, "contact_vcard_file_size");
 
 	if (node.contains("contact_information") && node["contact_information"].is_object())
 	{
 		const auto& infoNode = node["contact_information"];
 		ContactInformation info;
-		info.firstName = ExtractString(infoNode, "first_name");
-		info.lastName = ExtractString(infoNode, "last_name");
-		info.phoneNumber = ExtractString(infoNode, "phone_number");
-		message.contactInformation = info;
+		info.firstName = ExtractValue<std::string>(infoNode, "first_name");
+		info.lastName = ExtractValue<std::string>(infoNode, "last_name");
+		info.phoneNumber = ExtractValue<std::string>(infoNode, "phone_number");
+		message.contactInformation = std::move(info);
 	}
 }
 
@@ -187,22 +185,22 @@ void ParsePollMetadata(const nlohmann::json& node, RawMessage& message)
 
 	const auto& pollNode = node["poll"];
 	Poll poll;
-	poll.question = ExtractString(pollNode, "question").value_or("");
-	poll.closed = ExtractBool(pollNode, "closed").value_or(false);
-	poll.totalVoters = static_cast<int>(ExtractInt64(pollNode, "total_voters").value_or(0));
+	poll.question = ExtractValue<std::string>(pollNode, "question").value_or("");
+	poll.closed = ExtractValue<bool>(pollNode, "closed").value_or(false);
+	poll.totalVoters = static_cast<int>(ExtractValue<int64_t>(pollNode, "total_voters").value_or(0));
 
 	if (pollNode.contains("answers") && pollNode["answers"].is_array())
 	{
 		for (const auto& answerNode : pollNode["answers"])
 		{
 			PollAnswer answer;
-			answer.text = ExtractString(answerNode, "text").value_or("");
-			answer.voters = static_cast<int>(ExtractInt64(answerNode, "voters").value_or(0));
-			answer.chosen = ExtractBool(answerNode, "chosen").value_or(false);
-			poll.answers.push_back(answer);
+			answer.text = ExtractValue<std::string>(answerNode, "text").value_or("");
+			answer.voters = static_cast<int>(ExtractValue<int64_t>(answerNode, "voters").value_or(0));
+			answer.chosen = ExtractValue<bool>(answerNode, "chosen").value_or(false);
+			poll.answers.push_back(std::move(answer));
 		}
 	}
-	message.poll = poll;
+	message.poll = std::move(poll);
 }
 
 void ParseReactionsMetadata(const nlohmann::json& node, RawMessage& message)
@@ -215,33 +213,33 @@ void ParseReactionsMetadata(const nlohmann::json& node, RawMessage& message)
 	for (const auto& reactionNode : node["reactions"])
 	{
 		Reaction reaction;
-		reaction.type = ExtractString(reactionNode, "type").value_or("");
-		reaction.count = static_cast<int>(ExtractInt64(reactionNode, "count").value_or(0));
-		reaction.emoji = ExtractString(reactionNode, "emoji");
+		reaction.type = ExtractValue<std::string>(reactionNode, "type").value_or("");
+		reaction.count = static_cast<int>(ExtractValue<int64_t>(reactionNode, "count").value_or(0));
+		reaction.emoji = ExtractValue<std::string>(reactionNode, "emoji");
 
 		if (reactionNode.contains("recent") && reactionNode["recent"].is_array())
 		{
 			for (const auto& recentNode : reactionNode["recent"])
 			{
 				ReactionRecent recent;
-				recent.from = ExtractString(recentNode, "from").value_or("");
-				recent.fromId = ExtractString(recentNode, "from_id").value_or("");
-				recent.date = ExtractString(recentNode, "date").value_or("");
-				reaction.recent.push_back(recent);
+				recent.from = ExtractValue<std::string>(recentNode, "from").value_or("");
+				recent.fromId = ExtractValue<std::string>(recentNode, "from_id").value_or("");
+				recent.date = ExtractValue<std::string>(recentNode, "date").value_or("");
+				reaction.recent.push_back(std::move(recent));
 			}
 		}
-		message.reactions.push_back(reaction);
+		message.reactions.push_back(std::move(reaction));
 	}
 }
 
 void ParseServiceMetadata(const nlohmann::json& node, RawMessage& message)
 {
-	message.title = ExtractString(node, "title");
-	message.newTitle = ExtractString(node, "new_title");
-	message.newIconEmojiId = ExtractString(node, "new_icon_emoji_id");
-	message.stickerEmoji = ExtractString(node, "sticker_emoji");
-	message.richMessage = ExtractBool(node, "rich_message");
-	message.viaBot = ExtractString(node, "via_bot");
+	message.title = ExtractValue<std::string>(node, "title");
+	message.newTitle = ExtractValue<std::string>(node, "new_title");
+	message.newIconEmojiId = ExtractValue<std::string>(node, "new_icon_emoji_id");
+	message.stickerEmoji = ExtractValue<std::string>(node, "sticker_emoji");
+	message.richMessage = ExtractValue<bool>(node, "rich_message");
+	message.viaBot = ExtractValue<std::string>(node, "via_bot");
 
 	if (node.contains("inline_bot_buttons"))
 	{
@@ -277,10 +275,15 @@ RawMessage ParseSingleMessage(const nlohmann::json& node)
 	RawMessage message;
 	message.rawJson = node;
 
+	if (node.contains("text"))
+	{
+		message.text = node["text"];
+	}
+
 	ParseBaseMetadata(node, message);
 	ParseSenderMetadata(node, message);
 	ParseRelationsMetadata(node, message);
-	ParseTextMetadata(node, message);
+	ParseTextEntities(node, message);
 	ParseMediaMetadata(node, message);
 	ParseContactMetadata(node, message);
 	ParsePollMetadata(node, message);
@@ -307,10 +310,11 @@ std::vector<RawMessage> TelegramExportParser::Parse(const std::filesystem::path&
 	const nlohmann::json rootNode = ReadJsonFromFile(path);
 	AssertIsMessagesArrayExists(rootNode.contains("messages") && rootNode["messages"].is_array());
 
+	const auto& messagesArray = rootNode["messages"];
 	std::vector<RawMessage> parsedMessages;
-	parsedMessages.reserve(rootNode["messages"].size());
+	parsedMessages.reserve(messagesArray.size());
 
-	for (const auto& messageNode : rootNode["messages"])
+	for (const auto& messageNode : messagesArray)
 	{
 		parsedMessages.push_back(ParseSingleMessage(messageNode));
 	}

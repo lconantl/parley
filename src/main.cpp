@@ -1,38 +1,14 @@
+#include "analyzer/ConversationGrouper.hpp"
+#include "analyzer/DeepSeekSemanticSplitter.hpp"
+#include "analyzer/DiagnosticPrinter.hpp"
+#include "analyzer/IConversationGrouper.hpp"
 #include "analyzer/IRawParser.hpp"
-#include "analyzer/RawMessage.hpp"
-#include "analyzer/TelegramAnalyzer.hpp"
+#include "analyzer/ISemanticClusterSplitter.hpp"
 #include "analyzer/TelegramExportParser.hpp"
 #include "console/ConsoleEncoding.hpp"
-#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <vector>
-
-namespace
-{
-void PrintMessagesSummary(const std::vector<RawMessage>& messages, const size_t limit)
-{
-	std::cout << "\nTotal parsed messages: " << messages.size() << std::endl;
-	const size_t displayCount = std::min(messages.size(), limit);
-	std::cout << "Будет показано: " << displayCount << std::endl;
-
-	std::cout << "---------------------------" << std::endl;
-
-	for (size_t i = 0; i < displayCount; ++i)
-	{
-		const auto& message = messages[i];
-
-		std::cout << "Message ID: " << message.id.value_or(0) << std::endl;
-		std::cout << "Type: " << message.type.value_or("N/A") << std::endl;
-		std::cout << "Date: " << message.date.value_or("N/A") << std::endl;
-		std::cout << "From: " << message.from.value_or("N/A") << std::endl;
-		std::cout << "Text entities count: " << message.textEntities.size() << std::endl;
-		std::cout << "Extra fields count: " << message.extraFields.size() << std::endl;
-		std::cout << "Raw JSON size (bytes): " << message.rawJson.dump().size() << std::endl;
-		std::cout << "---------------------------" << std::endl;
-	}
-}
-} // namespace
 
 int main()
 {
@@ -40,10 +16,23 @@ int main()
 
 	try
 	{
-		TelegramAnalyzer::PrintReport("res");
-		const auto parser = std::make_unique<TelegramExportParser>();
-		const auto messages = parser->Parse("res/result.json");
-		PrintMessagesSummary(messages, 1);
+		const std::unique_ptr<IRawParser> parser = std::make_unique<TelegramExportParser>();
+		const std::vector<RawMessage> messages = parser->Parse("res/result.json");
+
+		const std::unique_ptr<IConversationGrouper> grouper = std::make_unique<ConversationGrouper>();
+		std::vector<MessageCluster> clusters = grouper->Group(messages);
+
+		const std::unique_ptr<ISemanticClusterSplitter> splitter = std::make_unique<DeepSeekSemanticSplitter>();
+		const std::vector<SemanticClusterSplit> splits = splitter->Split(clusters, messages);
+
+		if (false)
+		{
+			DiagnosticPrinter::PrintClusterDiagnostics(clusters, messages.size());
+			DiagnosticPrinter::PrintClustersTop(clusters, messages);
+			DiagnosticPrinter::PrintClusterById(clusters, messages, 42);
+		}
+
+		DiagnosticPrinter::PrintSemanticSplits(splits);
 	}
 	catch (const std::exception& exception)
 	{
