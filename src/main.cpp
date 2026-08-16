@@ -1,3 +1,5 @@
+#include "bot/ParleyBot.hpp"
+#include "config/Config.hpp"
 #include "console/ConsoleEncoding.hpp"
 #include <iostream>
 
@@ -7,11 +9,16 @@ int main()
 
 	try
 	{
-		std::cout << "parley" << std::endl;
+		std::cout << "Parley bot" << std::endl;
+
+		const Config config = Config::Load();
+		const ParleyBot bot(config);
+
+		bot.Run();
 	}
-	catch (std::exception& e)
+	catch (const std::exception& exception)
 	{
-		std::cerr << "[Error] " << e.what() << std::endl;
+		std::cerr << "[Error] " << exception.what() << std::endl;
 		return EXIT_FAILURE;
 	}
 
