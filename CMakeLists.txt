@@ -22,6 +22,7 @@ target_link_libraries(core PUBLIC TgBot::TgBot)
 
 if(MSVC)
     target_compile_options(core PRIVATE /W4 /WX /utf-8)
+    target_compile_definitions(core PUBLIC _WIN32_WINNT=0x0A00)
 else()
     target_compile_options(core PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
