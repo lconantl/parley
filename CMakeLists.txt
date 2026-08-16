@@ -33,3 +33,4 @@ endif ()
 
 add_executable(analyzer src/main.cpp)
 target_link_libraries(analyzer PRIVATE core)
+set_target_properties(analyzer PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}")
