@@ -1,0 +1,7 @@
+{
+  "name": "parley",
+  "version": "1.0.0",
+  "dependencies": [
+    "tgbot-cpp"
+  ]
+}
