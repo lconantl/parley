@@ -1,5 +1,4 @@
-#include "bot/ParleyBot.hpp"
-#include "config/Config.hpp"
+#include "analyzer/TelegramAnalyzer.hpp"
 #include "console/ConsoleEncoding.hpp"
 #include <iostream>
 
@@ -9,12 +8,7 @@ int main()
 
 	try
 	{
-		std::cout << "Parley bot" << std::endl;
-
-		const Config config = Config::Load();
-		const ParleyBot bot(config);
-
-		bot.Run();
+		TelegramAnalyzer::PrintReport("res");
 	}
 	catch (const std::exception& exception)
 	{
