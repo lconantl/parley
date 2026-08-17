@@ -1,14 +1,9 @@
-#include "analyzer/ConversationGrouper.hpp"
-#include "analyzer/DeepSeekSemanticSplitter.hpp"
-#include "analyzer/DiagnosticPrinter.hpp"
-#include "analyzer/IConversationGrouper.hpp"
-#include "analyzer/IRawParser.hpp"
-#include "analyzer/ISemanticClusterSplitter.hpp"
-#include "analyzer/TelegramExportParser.hpp"
+#include "ai/DeepSeekClient.hpp"
+#include "config/Config.hpp"
 #include "console/ConsoleEncoding.hpp"
+#include "http/HttplibHttpClient.hpp"
 #include <iostream>
 #include <memory>
-#include <vector>
 
 int main()
 {
@@ -16,23 +11,20 @@ int main()
 
 	try
 	{
-		const std::unique_ptr<IRawParser> parser = std::make_unique<TelegramExportParser>();
-		const std::vector<RawMessage> messages = parser->Parse("res/result.json");
+		const Config config = Config::Load();
+		auto httpClient = std::make_unique<HttplibHttpClient>();
 
-		const std::unique_ptr<IConversationGrouper> grouper = std::make_unique<ConversationGrouper>();
-		std::vector<MessageCluster> clusters = grouper->Group(messages);
+		DeepSeekClient aiClient(config, std::move(httpClient));
 
-		const std::unique_ptr<ISemanticClusterSplitter> splitter = std::make_unique<DeepSeekSemanticSplitter>();
-		const std::vector<SemanticClusterSplit> splits = splitter->Split(clusters, messages);
+		std::cout << "Отправка тестового запроса к DeepSeek..." << std::endl;
 
-		if (false)
-		{
-			DiagnosticPrinter::PrintClusterDiagnostics(clusters, messages.size());
-			DiagnosticPrinter::PrintClustersTop(clusters, messages);
-			DiagnosticPrinter::PrintClusterById(clusters, messages, 42);
-		}
+		const std::string response = aiClient.Complete(
+			"You are a helpful assistant. Reply with JSON only.",
+			"Return JSON: {\"ok\": true}",
+			true
+		);
 
-		DiagnosticPrinter::PrintSemanticSplits(splits);
+		std::cout << "Ответ модели:\n" << response << std::endl;
 	}
 	catch (const std::exception& exception)
 	{
