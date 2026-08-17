@@ -15,5 +15,6 @@ struct SemanticClusterSplit
 	int64_t clusterId = 0;
 	bool split = false;
 	std::vector<SemanticComponent> components;
+	std::vector<int64_t> unassignedMessageIds;
 	std::string rawAiResponse;
 };

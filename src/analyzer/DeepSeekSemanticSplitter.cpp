@@ -96,24 +96,18 @@ std::string PrepareAiPrompt(const MessageCluster& cluster, const std::unordered_
 	return payload.dump();
 }
 
-std::string PerformNetworkRequestMock(const std::string& requestJson)
+std::string GetSystemPrompt()
 {
-	const nlohmann::json req = nlohmann::json::parse(requestJson);
-	nlohmann::json res;
-	res["cluster_id"] = req["cluster_id"];
-	res["split"] = false;
-
-	nlohmann::json comp;
-	comp["id"] = std::to_string(req["cluster_id"].get<int64_t>()) + "-1";
-	comp["message_ids"] = nlohmann::json::array();
-
-	for (const auto& m : req["messages"])
-	{
-		comp["message_ids"].push_back(m["id"]);
-	}
-
-	res["components"] = nlohmann::json::array({comp});
-	return res.dump();
+	return "Определи, является ли данный набор сообщений одной смысловой единицей разговора. "
+		   "Если нет — раздели его на минимальное количество самостоятельных смысловых компонентов.\n"
+		   "ПРАВИЛА:\n"
+		   "1. Каждое входное сообщение ОБЯЗАНО быть учтено. Ни один message_id нельзя потерять.\n"
+		   "2. Каждый message_id должен находиться хотя бы в одном components[].message_ids ИЛИ в unassigned_message_ids.\n"
+		   "3. Одно сообщение разрешено включать в несколько компонентов, если оно относится к нескольким смысловым компонентам.\n"
+		   "4. Нельзя придумывать message_id. Нельзя изменять сообщения.\n"
+		   "5. Верни строго JSON со структурой: 'cluster_id' (число), 'split' (булевое значение), "
+		   "'components' (массив объектов с полями 'id' (строка) и 'message_ids' (массив чисел)), "
+		   "'unassigned_message_ids' (массив чисел).";
 }
 
 SemanticClusterSplit ParseAiResponse(const std::string& responseJson)
@@ -134,6 +128,7 @@ SemanticClusterSplit ParseAiResponse(const std::string& responseJson)
 	AssertIsConditionMet(root.contains("cluster_id") && root["cluster_id"].is_number(), "Отсутствует корректное поле cluster_id");
 	AssertIsConditionMet(root.contains("split") && root["split"].is_boolean(), "Отсутствует корректное поле split");
 	AssertIsConditionMet(root.contains("components") && root["components"].is_array(), "Отсутствует массив components");
+	AssertIsConditionMet(root.contains("unassigned_message_ids") && root["unassigned_message_ids"].is_array(), "Отсутствует массив unassigned_message_ids");
 
 	split.clusterId = root["cluster_id"].get<int64_t>();
 	split.split = root["split"].get<bool>();
@@ -155,35 +150,119 @@ SemanticClusterSplit ParseAiResponse(const std::string& responseJson)
 		split.components.push_back(std::move(component));
 	}
 
+	for (const auto& idNode : root["unassigned_message_ids"])
+	{
+		AssertIsConditionMet(idNode.is_number(), "Идентификатор нераспределенного сообщения должен быть числом");
+		split.unassignedMessageIds.push_back(idNode.get<int64_t>());
+	}
+
 	return split;
 }
 
-void ValidateSplitAgainstOriginal(const SemanticClusterSplit& split, const MessageCluster& cluster)
+struct ValidationResult
 {
-	AssertIsConditionMet(split.clusterId == cluster.id, "ID кластера в ответе не совпадает с запрошенным");
+	bool isValid = false;
+	std::vector<int64_t> missingIds;
+	std::string errorMessage;
+};
 
-	const std::unordered_set expectedIds(cluster.messageIds.begin(), cluster.messageIds.end());
-	std::unordered_set<int64_t> actualIds;
+ValidationResult CheckCoverage(const SemanticClusterSplit& split, const MessageCluster& cluster)
+{
+	ValidationResult result;
+	result.isValid = true;
+
+	if (split.clusterId != cluster.id)
+	{
+		result.isValid = false;
+		result.errorMessage = "ID кластера в ответе не совпадает с запрошенным";
+		return result;
+	}
+
 	std::unordered_set<std::string> componentIds;
+	std::unordered_set<int64_t> assigned;
 
 	for (const auto& comp : split.components)
 	{
-		AssertIsConditionMet(!componentIds.contains(comp.id), "Нейросеть вернула дублирующиеся ID компонентов");
+		if (componentIds.contains(comp.id))
+		{
+			result.isValid = false;
+			result.errorMessage = "Нейросеть вернула дублирующиеся ID компонентов";
+			return result;
+		}
 		componentIds.insert(comp.id);
 
 		for (const int64_t msgId : comp.messageIds)
 		{
-			AssertIsConditionMet(expectedIds.contains(msgId), "Нейросеть придумала несуществующий ID сообщения (галлюцинация)");
-			actualIds.insert(msgId);
+			assigned.insert(msgId);
 		}
 	}
 
-	AssertIsConditionMet(actualIds.size() == expectedIds.size(), "Нейросеть потеряла часть сообщений при разделении (существуют 'потеряшки')");
+	std::unordered_set<int64_t> unassigned(split.unassignedMessageIds.begin(), split.unassignedMessageIds.end());
+	std::unordered_set<int64_t> expected(cluster.messageIds.begin(), cluster.messageIds.end());
+
+	for (const int64_t id : expected)
+	{
+		if (!assigned.contains(id) && !unassigned.contains(id))
+		{
+			result.missingIds.push_back(id);
+		}
+	}
+
+	for (const int64_t id : assigned)
+	{
+		if (!expected.contains(id))
+		{
+			result.isValid = false;
+			result.errorMessage = "Нейросеть придумала несуществующий ID сообщения (галлюцинация)";
+			return result;
+		}
+		if (unassigned.contains(id))
+		{
+			result.isValid = false;
+			result.errorMessage = "Сообщение находится одновременно в компонентах и в unassigned_message_ids";
+			return result;
+		}
+	}
+
+	for (const int64_t id : unassigned)
+	{
+		if (!expected.contains(id))
+		{
+			result.isValid = false;
+			result.errorMessage = "Нейросеть добавила несуществующий ID в unassigned_message_ids";
+			return result;
+		}
+	}
+
+	if (!result.missingIds.empty())
+	{
+		result.isValid = false;
+		result.errorMessage = "Нейросеть потеряла часть сообщений при разделении";
+	}
+
+	return result;
+}
+
+std::string FormatRetryPrompt(const std::string& originalPrompt, const std::vector<int64_t>& missingIds)
+{
+	std::string retryPrompt = originalPrompt + "\n\nТы пропустил следующие сообщения:\n[";
+	for (size_t i = 0; i < missingIds.size(); ++i)
+	{
+		retryPrompt += std::to_string(missingIds[i]);
+		if (i + 1 < missingIds.size())
+		{
+			retryPrompt += ", ";
+		}
+	}
+	retryPrompt += "].\nРаспредели их по существующим компонентам. Если они действительно не относятся ни к одному, помести их в unassigned_message_ids.";
+	return retryPrompt;
 }
 } // namespace
 
-DeepSeekSemanticSplitter::DeepSeekSemanticSplitter()
+DeepSeekSemanticSplitter::DeepSeekSemanticSplitter(std::unique_ptr<IAIClient> aiClient)
+	: m_aiClient(std::move(aiClient))
 {
+	AssertIsConditionMet(m_aiClient != nullptr, "Указатель на IAIClient не может быть пустым");
 }
 
 DeepSeekSemanticSplitter::~DeepSeekSemanticSplitter()
@@ -200,17 +279,47 @@ std::vector<SemanticClusterSplit> DeepSeekSemanticSplitter::Split(
 
 	for (const auto& cluster : clusters)
 	{
-		if (cluster.messageIds.size() < 2)
+		if (cluster.messageIds.size() < 50)
 		{
 			continue;
 		}
 
-		const std::string prompt = PrepareAiPrompt(cluster, index);
-		const std::string response = PerformNetworkRequestMock(prompt);
-		const SemanticClusterSplit split = ParseAiResponse(response);
+		std::string prompt = PrepareAiPrompt(cluster, index);
+		SemanticClusterSplit finalSplit;
+		bool success = false;
 
-		ValidateSplitAgainstOriginal(split, cluster);
-		results.push_back(split);
+		for (int attempt = 0; attempt < 3; ++attempt)
+		{
+			const std::string response = m_aiClient->Complete(GetSystemPrompt(), prompt, true);
+			SemanticClusterSplit split = ParseAiResponse(response);
+			ValidationResult validation = CheckCoverage(split, cluster);
+
+			if (validation.isValid)
+			{
+				finalSplit = std::move(split);
+				success = true;
+				break;
+			}
+
+			if (attempt == 2)
+			{
+				AssertIsConditionMet(false, validation.errorMessage);
+			}
+
+			if (!validation.missingIds.empty())
+			{
+				prompt = FormatRetryPrompt(prompt, validation.missingIds);
+			}
+			else
+			{
+				AssertIsConditionMet(false, validation.errorMessage);
+			}
+		}
+
+		if (success)
+		{
+			results.push_back(std::move(finalSplit));
+		}
 	}
 
 	return results;
