@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BfoOrganization.hpp"
 #include "http/HttpClient.hpp"
 
 #include <nlohmann/json_fwd.hpp>
@@ -81,47 +82,59 @@ class BfoWebScraper
 {
 public:
 	explicit BfoWebScraper(
-		const Config& config
-	);
+		const Config& config);
 
 	[[nodiscard]]
 	SearchResponse Search(
 		const std::string& query,
-		int page = 0
-	) const;
+		int page = 0) const;
 
 	[[nodiscard]]
 	SearchResponse SearchByInn(
-		const std::string& inn
-	) const;
+		const std::string& inn) const;
 
 	[[nodiscard]]
 	SearchResponse SearchByName(
-		const std::string& name
-	) const;
+		const std::string& name) const;
+
+	[[nodiscard]]
+	BfoOrganizationProfile GetOrganizationProfile(
+		int organizationId) const;
+
+	[[nodiscard]]
+	std::vector<BfoPeriodReport> GetOrganizationBfoHistory(
+		int organizationId) const;
 
 private:
 	[[nodiscard]]
 	static SearchResponse ParseSearchResponse(
 		const nlohmann::json& root,
-		const std::string& baseUrl
-	);
+		const std::string& baseUrl);
 
 	[[nodiscard]]
 	static CompanySearchResult ParseCompany(
 		const nlohmann::json& item,
-		const std::string& baseUrl
-	);
+		const std::string& baseUrl);
+
+	[[nodiscard]]
+	static BfoOrganizationProfile ParseOrganizationProfile(
+		const nlohmann::json& root);
+
+	[[nodiscard]]
+	static BfoPeriodReport ParsePeriodReport(
+		const nlohmann::json& item);
+
+	[[nodiscard]]
+	nlohmann::json FetchNboJson(
+		const std::string& path) const;
 
 	[[nodiscard]]
 	static std::string StripTags(
-		const std::string& value
-	);
+		const std::string& value);
 
 	[[nodiscard]]
 	static std::string UrlEncode(
-		const std::string& value
-	);
+		const std::string& value);
 
 	HttpClient m_httpClient;
 	std::string m_baseUrl;

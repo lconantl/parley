@@ -209,6 +209,258 @@ BfoInfo ParseBfoInfo(
 	return result;
 }
 
+constexpr const char* NBO_API_PREFIX = "/nbo";
+
+std::optional<std::int64_t> OptInt64Value(
+	const nlohmann::json& json,
+	const char* key)
+{
+	const auto iterator = json.find(key);
+
+	if (
+		iterator == json.end()
+		|| iterator->is_null())
+	{
+		return std::nullopt;
+	}
+
+	return iterator->get<std::int64_t>();
+}
+
+std::optional<int> OptIntValue(
+	const nlohmann::json& json,
+	const char* key)
+{
+	const auto iterator = json.find(key);
+
+	if (
+		iterator == json.end()
+		|| iterator->is_null())
+	{
+		return std::nullopt;
+	}
+
+	return iterator->get<int>();
+}
+
+std::optional<bool> OptBoolValue(
+	const nlohmann::json& json,
+	const char* key)
+{
+	const auto iterator = json.find(key);
+
+	if (
+		iterator == json.end()
+		|| iterator->is_null())
+	{
+		return std::nullopt;
+	}
+
+	return iterator->get<bool>();
+}
+
+nlohmann::json OptJsonBlock(
+	const nlohmann::json& json,
+	const char* key)
+{
+	const auto iterator = json.find(key);
+
+	if (
+		iterator == json.end()
+		|| iterator->is_null())
+	{
+		return nlohmann::json(nullptr);
+	}
+
+	return *iterator;
+}
+
+template <typename T, typename ParseFn>
+std::optional<T> ParseOptional(
+	const nlohmann::json& json,
+	const char* key,
+	ParseFn parse)
+{
+	const auto iterator = json.find(key);
+
+	if (
+		iterator == json.end()
+		|| iterator->is_null())
+	{
+		return std::nullopt;
+	}
+
+	return parse(*iterator);
+}
+
+BfoCodeName ParseCodeName(
+	const nlohmann::json& json)
+{
+	BfoCodeName result;
+
+	const auto idIterator = json.find("id");
+
+	if (
+		idIterator != json.end()
+		&& !idIterator->is_null())
+	{
+		result.id = idIterator->is_string()
+			? idIterator->get<std::string>()
+			: idIterator->dump();
+	}
+
+	result.name = OptString(
+		json,
+		"name")
+					  .value_or("");
+
+	return result;
+}
+
+BfoLocation ParseLocation(
+	const nlohmann::json& json)
+{
+	BfoLocation result;
+
+	result.id = OptIntValue(json, "id");
+	result.name = OptString(json, "name");
+	result.code = OptIntValue(json, "code");
+	result.latitude = OptDouble(json, "latitude");
+	result.longitude = OptDouble(json, "longitude");
+	result.type = OptString(json, "type");
+	result.parentId = OptIntValue(json, "parentId");
+
+	return result;
+}
+
+BfoFileMetadata ParseFileMetadata(
+	const nlohmann::json& json)
+{
+	BfoFileMetadata result;
+
+	result.id = OptIntValue(json, "id");
+	result.contentType = OptString(json, "contentType");
+	result.size = OptInt64Value(json, "size");
+	result.originalName = OptString(json, "originalName");
+	result.fileToken = OptString(json, "fileToken");
+
+	return result;
+}
+
+BfoAuditReport ParseAuditReport(
+	const nlohmann::json& json)
+{
+	BfoAuditReport result;
+
+	result.id = OptIntValue(json, "id");
+	result.inn = OptString(json, "inn");
+	result.ogrn = OptString(json, "ogrn");
+	result.name = OptString(json, "name");
+	result.isOrganization = OptBoolValue(json, "isOrganization");
+	result.fileMetadata = ParseOptional<BfoFileMetadata>(json, "fileMetadata", ParseFileMetadata);
+
+	return result;
+}
+
+BfoClarification ParseClarification(
+	const nlohmann::json& json)
+{
+	BfoClarification result;
+
+	result.id = OptIntValue(json, "id");
+	result.fileMetadata = ParseOptional<BfoFileMetadata>(json, "fileMetadata", ParseFileMetadata);
+
+	return result;
+}
+
+BfoOrganizationInfoRef ParseOrganizationInfoRef(
+	const nlohmann::json& json)
+{
+	BfoOrganizationInfoRef result;
+
+	result.fullName = OptString(json, "fullName");
+	result.inn = OptString(json, "inn");
+	result.kpp = OptString(json, "kpp");
+	result.address = OptString(json, "address");
+	result.okved2 = ParseOptional<BfoCodeName>(json, "okved2", ParseCodeName);
+	result.okopf = ParseOptional<BfoCodeName>(json, "okopf", ParseCodeName);
+	result.okfs = ParseOptional<BfoCodeName>(json, "okfs", ParseCodeName);
+	result.okpo = OptString(json, "okpo");
+
+	return result;
+}
+
+BfoCorrection ParseCorrection(
+	const nlohmann::json& json)
+{
+	BfoCorrection result;
+
+	result.id = RequiredInt(json, "id");
+	result.bfoOrganizationInfo = ParseOrganizationInfoRef(
+		OptJsonBlock(json, "bfoOrganizationInfo"));
+
+	result.balance = OptJsonBlock(json, "balance");
+	result.financialResult = OptJsonBlock(json, "financialResult");
+	result.capitalChange = OptJsonBlock(json, "capitalChange");
+	result.fundsMovement = OptJsonBlock(json, "fundsMovement");
+
+	result.correctionVersion = OptInt(json, "correctionVersion", 0);
+	result.requiredAudit = OptIntValue(json, "requiredAudit");
+	result.datePresent = OptString(json, "datePresent");
+	result.prBn = OptIntValue(json, "prBn");
+	result.knd = OptString(json, "knd");
+	result.auditReport = ParseOptional<BfoAuditReport>(json, "auditReport", ParseAuditReport);
+	result.clarification = ParseOptional<BfoClarification>(json, "clarification", ParseClarification);
+	result.periodType = OptIntValue(json, "periodType");
+
+	return result;
+}
+
+BfoTypeCorrection ParseTypeCorrection(
+	const nlohmann::json& json)
+{
+	BfoTypeCorrection result;
+
+	result.type = OptInt(json, "type", 0);
+	result.correction = ParseCorrection(
+		OptJsonBlock(json, "correction"));
+
+	return result;
+}
+
+BfoPeriodSummary ParsePeriodSummary(
+	const nlohmann::json& json)
+{
+	BfoPeriodSummary result;
+
+	result.period = RequiredString(json, "period");
+	result.publication = OptInt(json, "publication", 0);
+	result.actualBfoDate = OptString(json, "actualBfoDate");
+	result.gainSum = OptDouble(json, "gainSum");
+	result.knd = OptString(json, "knd");
+	result.hasAz = OptBool(json, "hasAz", false);
+
+	const auto hasKsIterator = json.find("hasKs");
+
+	if (
+		hasKsIterator != json.end()
+		&& !hasKsIterator->is_null())
+	{
+		result.hasKs = hasKsIterator->get<bool>();
+	}
+
+	result.actualCorrectionNumber = OptInt(json, "actualCorrectionNumber", 0);
+	result.actualCorrectionDate = OptString(json, "actualCorrectionDate");
+	result.publishedCorrectionNumber = OptInt(json, "publishedCorrectionNumber", 0);
+	result.publishedCorrectionDate = OptString(json, "publishedCorrectionDate");
+	result.actives = OptDouble(json, "actives");
+	result.isCb = OptBool(json, "isCb", false);
+	result.mspCategory = OptString(json, "mspCategory");
+	result.published = OptBool(json, "published", false);
+
+	return result;
+}
+
 } // namespace
 
 BfoWebScraper::BfoWebScraper(
@@ -304,6 +556,183 @@ SearchResponse BfoWebScraper::SearchByName(
 {
 	return Search(
 		name);
+}
+
+BfoOrganizationProfile BfoWebScraper::GetOrganizationProfile(
+	const int organizationId) const
+{
+	return ParseOrganizationProfile(
+		FetchNboJson(
+			"/organizations/" + std::to_string(organizationId)));
+}
+
+std::vector<BfoPeriodReport> BfoWebScraper::GetOrganizationBfoHistory(
+	const int organizationId) const
+{
+	const nlohmann::json root = FetchNboJson(
+		"/organizations/" + std::to_string(organizationId) + "/bfo/");
+
+	std::vector<BfoPeriodReport> result;
+
+	if (root.is_array())
+	{
+		result.reserve(root.size());
+
+		for (const auto& item : root)
+		{
+			result.push_back(
+				ParsePeriodReport(item));
+		}
+	}
+
+	return result;
+}
+
+nlohmann::json BfoWebScraper::FetchNboJson(
+	const std::string& path) const
+{
+	const HttpResponse response = m_httpClient.Get(
+		NBO_API_PREFIX + path,
+		{
+			{"Accept", "application/json"},
+			{"X-Requested-With", "XMLHttpRequest"},
+			{"Referer", "https://bo.nalog.gov.ru/"},
+		});
+
+	std::cout
+		<< "[BFO] HTTP: "
+		<< response.status
+		<< ", body: "
+		<< response.body.size()
+		<< " bytes"
+		<< std::endl;
+
+	if (
+		response.status < 200
+		|| response.status >= 300)
+	{
+		throw std::runtime_error(
+			"БФО вернул HTTP "
+			+ std::to_string(
+				response.status));
+	}
+
+	try
+	{
+		return nlohmann::json::parse(
+			response.body);
+	}
+	catch (const nlohmann::json::parse_error& exception)
+	{
+		throw std::runtime_error(
+			std::string(
+				"Не удалось разобрать ответ БФО: ")
+			+ exception.what());
+	}
+}
+
+BfoOrganizationProfile BfoWebScraper::ParseOrganizationProfile(
+	const nlohmann::json& root)
+{
+	BfoOrganizationProfile result;
+
+	result.id = RequiredInt(root, "id");
+	result.inn = RequiredString(root, "inn");
+	result.shortName = RequiredString(root, "shortName");
+	result.ogrn = RequiredString(root, "ogrn");
+	result.index = OptString(root, "index");
+	result.region = OptString(root, "region");
+	result.district = OptString(root, "district");
+	result.city = OptString(root, "city");
+	result.settlement = OptString(root, "settlement");
+	result.street = OptString(root, "street");
+	result.house = OptString(root, "house");
+	result.building = OptString(root, "building");
+	result.office = OptString(root, "office");
+	result.okved2 = ParseOptional<BfoCodeName>(root, "okved2", ParseCodeName);
+	result.okopf = ParseOptional<BfoCodeName>(root, "okopf", ParseCodeName);
+
+	const auto bfoIterator = root.find("bfo");
+
+	if (
+		bfoIterator != root.end()
+		&& bfoIterator->is_array())
+	{
+		result.bfo.reserve(bfoIterator->size());
+
+		for (const auto& item : *bfoIterator)
+		{
+			result.bfo.push_back(
+				ParsePeriodSummary(item));
+		}
+	}
+
+	result.okato = OptString(root, "okato");
+	result.okpo = OptString(root, "okpo");
+	result.okfs = OptString(root, "okfs");
+	result.statusCode = OptString(root, "statusCode");
+	result.statusDate = OptString(root, "statusDate");
+	result.msp = OptString(root, "msp");
+	result.kpp = OptString(root, "kpp");
+	result.fullName = OptString(root, "fullName");
+	result.registrationDate = OptString(root, "registrationDate");
+	result.location = ParseOptional<BfoLocation>(root, "location", ParseLocation);
+	result.authorizedCapital = OptDouble(root, "authorizedCapital");
+	result.active = OptBool(root, "active", false);
+
+	return result;
+}
+
+BfoPeriodReport BfoWebScraper::ParsePeriodReport(
+	const nlohmann::json& item)
+{
+	BfoPeriodReport result;
+
+	result.id = RequiredInt(item, "id");
+	result.period = RequiredString(item, "period");
+	result.publication = OptInt(item, "publication", 0);
+	result.actualBfoDate = OptString(item, "actualBfoDate");
+	result.gainSum = OptDouble(item, "gainSum");
+	result.knd = OptString(item, "knd");
+	result.hasAz = OptBool(item, "hasAz", false);
+
+	const auto hasKsIterator = item.find("hasKs");
+
+	if (
+		hasKsIterator != item.end()
+		&& !hasKsIterator->is_null())
+	{
+		result.hasKs = hasKsIterator->get<bool>();
+	}
+
+	result.actualCorrectionNumber = OptInt(item, "actualCorrectionNumber", 0);
+	result.actualCorrectionDate = OptString(item, "actualCorrectionDate");
+	result.publishedCorrectionNumber = OptInt(item, "publishedCorrectionNumber", 0);
+	result.publishedCorrectionDate = OptString(item, "publishedCorrectionDate");
+	result.actives = OptDouble(item, "actives");
+	result.isCb = OptBool(item, "isCb", false);
+	result.mspCategory = OptString(item, "mspCategory");
+	result.organizationInfo = ParseOrganizationInfoRef(
+		OptJsonBlock(item, "organizationInfo"));
+
+	const auto typeCorrectionsIterator = item.find("typeCorrections");
+
+	if (
+		typeCorrectionsIterator != item.end()
+		&& typeCorrectionsIterator->is_array())
+	{
+		result.typeCorrections.reserve(typeCorrectionsIterator->size());
+
+		for (const auto& correctionItem : *typeCorrectionsIterator)
+		{
+			result.typeCorrections.push_back(
+				ParseTypeCorrection(correctionItem));
+		}
+	}
+
+	result.published = OptBool(item, "published", false);
+
+	return result;
 }
 
 SearchResponse BfoWebScraper::ParseSearchResponse(
@@ -486,7 +915,7 @@ CompanySearchResult BfoWebScraper::ParseCompany(
 	company.cardUrl = baseUrl
 		+ "/organizations-card/"
 		+ std::to_string(
-			  company.id);
+			company.id);
 
 	return company;
 }

@@ -2,6 +2,10 @@
 
 #include <zip.h>
 
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+#include <fstream>
 #include <sstream>
 #include <stdexcept>
 #include <utility>
@@ -19,10 +23,6 @@ constexpr const char* SLIDE_MASTER_RELS = "<Relationships xmlns=\"http://schemas
 constexpr const char* SLIDE_LAYOUT_RELS = "<Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\">"
 										  "<Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster\" Target=\"../slideMasters/slideMaster1.xml\"/>"
 										  "</Relationships>";
-
-constexpr const char* SLIDE_RELS = "<Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\">"
-								   "<Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout\" Target=\"../slideLayouts/slideLayout1.xml\"/>"
-								   "</Relationships>";
 
 constexpr const char* ROOT_RELS = "<Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\">"
 								  "<Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument\" Target=\"ppt/presentation.xml\"/>"
@@ -113,8 +113,8 @@ constexpr const char* THEME_XML = "<a:theme xmlns:a=\"http://schemas.openxmlform
 								  "<a:folHlink><a:srgbClr val=\"954F72\"/></a:folHlink>"
 								  "</a:clrScheme>"
 								  "<a:fontScheme name=\"Parley\">"
-								  "<a:majorFont><a:latin typeface=\"Calibri Light\"/><a:ea typeface=\"\"/><a:cs typeface=\"\"/></a:majorFont>"
-								  "<a:minorFont><a:latin typeface=\"Calibri\"/><a:ea typeface=\"\"/><a:cs typeface=\"\"/></a:minorFont>"
+								  "<a:majorFont><a:latin typeface=\"Inter\"/><a:ea typeface=\"\"/><a:cs typeface=\"\"/></a:majorFont>"
+								  "<a:minorFont><a:latin typeface=\"Inter\"/><a:ea typeface=\"\"/><a:cs typeface=\"\"/></a:minorFont>"
 								  "</a:fontScheme>"
 								  "<a:fmtScheme name=\"Parley\">"
 								  "<a:fillStyleLst>"
@@ -213,7 +213,52 @@ void PptxBuilder::Save(
 	{
 		std::vector<std::pair<std::string, std::string>> parts;
 
-		parts.emplace_back("[Content_Types].xml", BuildContentTypes(m_slides.size()));
+		std::vector<std::vector<std::string>> slideImageRelationshipIds(m_slides.size());
+		std::vector<std::vector<std::string>> slideImageTargets(m_slides.size());
+		std::vector<std::string> imageExtensions;
+		std::size_t nextMediaIndex = 1;
+
+		for (std::size_t slideIndex = 0; slideIndex < m_slides.size(); ++slideIndex)
+		{
+			for (const PptxImage& image : m_slides[slideIndex].images)
+			{
+				std::string extension = image.path.extension().string();
+
+				if (!extension.empty() && extension.front() == '.')
+				{
+					extension.erase(0, 1);
+				}
+
+				std::transform(
+					extension.begin(),
+					extension.end(),
+					extension.begin(),
+					[](const unsigned char character) {
+						return static_cast<char>(std::tolower(character));
+					});
+
+				(void)GetImageContentType(extension);
+
+				const std::string mediaFileName = "image" + std::to_string(nextMediaIndex) + "." + extension;
+
+				parts.emplace_back(
+					"ppt/media/" + mediaFileName,
+					ReadBinaryFile(image.path));
+
+				slideImageRelationshipIds[slideIndex].push_back(
+					"rId" + std::to_string(slideImageRelationshipIds[slideIndex].size() + 2));
+				slideImageTargets[slideIndex].push_back("../media/" + mediaFileName);
+
+				if (std::find(imageExtensions.begin(), imageExtensions.end(), extension) == imageExtensions.end())
+				{
+					imageExtensions.push_back(extension);
+				}
+
+				++nextMediaIndex;
+			}
+		}
+
+		parts.emplace_back("[Content_Types].xml", BuildContentTypes(m_slides.size(), imageExtensions));
 		parts.emplace_back("_rels/.rels", BuildRootRels());
 		parts.emplace_back("docProps/core.xml", BuildCoreProps());
 		parts.emplace_back("docProps/app.xml", BuildAppProps(m_slides.size()));
@@ -231,11 +276,11 @@ void PptxBuilder::Save(
 
 			parts.emplace_back(
 				BuildSlidePartName(slideNumber),
-				BuildSlideXml(m_slides[index]));
+				BuildSlideXml(m_slides[index], slideImageRelationshipIds[index]));
 
 			parts.emplace_back(
 				"ppt/slides/_rels/slide" + std::to_string(slideNumber) + ".xml.rels",
-				BuildSlideRels());
+				BuildSlideRels(slideImageTargets[index]));
 		}
 
 		for (const auto& [name, content] : parts)
@@ -257,7 +302,8 @@ void PptxBuilder::Save(
 }
 
 std::string PptxBuilder::BuildContentTypes(
-	const std::size_t slideCount)
+	const std::size_t slideCount,
+	const std::vector<std::string>& imageExtensions)
 {
 	std::ostringstream output;
 
@@ -265,7 +311,16 @@ std::string PptxBuilder::BuildContentTypes(
 		<< XML_DECLARATION
 		<< "<Types xmlns=\"http://schemas.openxmlformats.org/package/2006/content-types\">"
 		<< "<Default Extension=\"rels\" ContentType=\"application/vnd.openxmlformats-package.relationships+xml\"/>"
-		<< "<Default Extension=\"xml\" ContentType=\"application/xml\"/>"
+		<< "<Default Extension=\"xml\" ContentType=\"application/xml\"/>";
+
+	for (const std::string& extension : imageExtensions)
+	{
+		output
+			<< "<Default Extension=\"" << extension << "\""
+			<< " ContentType=\"" << GetImageContentType(extension) << "\"/>";
+	}
+
+	output
 		<< "<Override PartName=\"/ppt/presentation.xml\" ContentType=\"application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml\"/>"
 		<< "<Override PartName=\"/ppt/slideMasters/slideMaster1.xml\" ContentType=\"application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml\"/>"
 		<< "<Override PartName=\"/ppt/slideLayouts/slideLayout1.xml\" ContentType=\"application/vnd.openxmlformats-officedocument.presentationml.slideLayout+xml\"/>"
@@ -391,13 +446,34 @@ std::string PptxBuilder::BuildThemeXml()
 	return XML_DECLARATION + std::string(THEME_XML);
 }
 
-std::string PptxBuilder::BuildSlideRels()
+std::string PptxBuilder::BuildSlideRels(
+	const std::vector<std::string>& imageTargets)
 {
-	return XML_DECLARATION + std::string(SLIDE_RELS);
+	std::ostringstream output;
+
+	output
+		<< XML_DECLARATION
+		<< "<Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\">"
+		<< "<Relationship Id=\"rId1\""
+		<< " Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout\""
+		<< " Target=\"../slideLayouts/slideLayout1.xml\"/>";
+
+	for (std::size_t index = 0; index < imageTargets.size(); ++index)
+	{
+		output
+			<< "<Relationship Id=\"rId" << (index + 2) << "\""
+			<< " Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\""
+			<< " Target=\"" << imageTargets[index] << "\"/>";
+	}
+
+	output << "</Relationships>";
+
+	return output.str();
 }
 
 std::string PptxBuilder::BuildSlideXml(
-	const PptxSlide& slide)
+	const PptxSlide& slide,
+	const std::vector<std::string>& imageRelationshipIds)
 {
 	std::ostringstream output;
 
@@ -407,7 +483,17 @@ std::string PptxBuilder::BuildSlideXml(
 		<< " xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\""
 		<< " xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		<< " xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\">"
-		<< "<p:cSld>"
+		<< "<p:cSld>";
+
+	if (slide.backgroundColor)
+	{
+		output
+			<< "<p:bg><p:bgPr><a:solidFill><a:srgbClr val=\""
+			<< NormalizeHexColor(*slide.backgroundColor)
+			<< "\"/></a:solidFill><a:effectLst/></p:bgPr></p:bg>";
+	}
+
+	output
 		<< "<p:spTree>"
 		<< "<p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>"
 		<< "<p:grpSpPr/>"
@@ -419,11 +505,13 @@ std::string PptxBuilder::BuildSlideXml(
 		<< "</p:txBody>"
 		<< "</p:sp>";
 
+	int nextShapeId = 3;
+
 	if (!slide.bullets.empty())
 	{
 		output
 			<< "<p:sp>"
-			<< "<p:nvSpPr><p:cNvPr id=\"3\" name=\"Content\"/><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" idx=\"1\"/></p:nvPr></p:nvSpPr>"
+			<< "<p:nvSpPr><p:cNvPr id=\"" << nextShapeId << "\" name=\"Content\"/><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" idx=\"1\"/></p:nvPr></p:nvSpPr>"
 			<< "<p:spPr/>"
 			<< "<p:txBody><a:bodyPr/><a:lstStyle/>";
 
@@ -435,6 +523,14 @@ std::string PptxBuilder::BuildSlideXml(
 		output
 			<< "</p:txBody>"
 			<< "</p:sp>";
+
+		++nextShapeId;
+	}
+
+	for (std::size_t index = 0; index < slide.images.size(); ++index)
+	{
+		output << BuildPictureXml(nextShapeId, imageRelationshipIds[index], slide.images[index]);
+		++nextShapeId;
 	}
 
 	output
@@ -444,6 +540,117 @@ std::string PptxBuilder::BuildSlideXml(
 		<< "</p:sld>";
 
 	return output.str();
+}
+
+std::string PptxBuilder::BuildPictureXml(
+	const int shapeId,
+	const std::string& relationshipId,
+	const PptxImage& image)
+{
+	std::ostringstream output;
+
+	output
+		<< "<p:pic>"
+		<< "<p:nvPicPr>"
+		<< "<p:cNvPr id=\"" << shapeId << "\" name=\"Picture " << shapeId << "\"/>"
+		<< "<p:cNvPicPr><a:picLocks noChangeAspect=\"1\"/></p:cNvPicPr>"
+		<< "<p:nvPr/>"
+		<< "</p:nvPicPr>"
+		<< "<p:blipFill>"
+		<< "<a:blip r:embed=\"" << relationshipId << "\"/>"
+		<< "<a:stretch><a:fillRect/></a:stretch>"
+		<< "</p:blipFill>"
+		<< "<p:spPr>"
+		<< "<a:xfrm>"
+		<< "<a:off x=\"" << EmuFromInches(image.xInches) << "\" y=\"" << EmuFromInches(image.yInches) << "\"/>"
+		<< "<a:ext cx=\"" << EmuFromInches(image.widthInches) << "\" cy=\"" << EmuFromInches(image.heightInches) << "\"/>"
+		<< "</a:xfrm>"
+		<< "<a:prstGeom prst=\"rect\"><a:avLst/></a:prstGeom>"
+		<< "</p:spPr>"
+		<< "</p:pic>";
+
+	return output.str();
+}
+
+std::string PptxBuilder::GetImageContentType(
+	const std::string& extension)
+{
+	if (extension == "png")
+	{
+		return "image/png";
+	}
+
+	if (extension == "jpg" || extension == "jpeg")
+	{
+		return "image/jpeg";
+	}
+
+	if (extension == "gif")
+	{
+		return "image/gif";
+	}
+
+	if (extension == "bmp")
+	{
+		return "image/bmp";
+	}
+
+	throw std::runtime_error(
+		"Неподдерживаемый формат изображения: ." + extension);
+}
+
+std::string PptxBuilder::ReadBinaryFile(
+	const std::filesystem::path& path)
+{
+	std::ifstream file(path, std::ios::binary);
+
+	if (!file)
+	{
+		throw std::runtime_error(
+			"Не удалось открыть файл изображения: " + path.string());
+	}
+
+	std::ostringstream buffer;
+
+	buffer << file.rdbuf();
+
+	return buffer.str();
+}
+
+long long PptxBuilder::EmuFromInches(
+	const double inches)
+{
+	constexpr double EMU_PER_INCH = 914400.0;
+
+	return std::llround(inches * EMU_PER_INCH);
+}
+
+std::string PptxBuilder::NormalizeHexColor(
+	const std::string& color)
+{
+	std::string value = color;
+
+	if (!value.empty() && value.front() == '#')
+	{
+		value.erase(0, 1);
+	}
+
+	const bool validLength = value.size() == 6;
+
+	const bool validChars = std::all_of(
+		value.begin(),
+		value.end(),
+		[](const unsigned char character) {
+			return std::isxdigit(character) != 0;
+		});
+
+	if (!validLength || !validChars)
+	{
+		throw std::runtime_error(
+			"Некорректный HEX-цвет: " + color);
+	}
+
+	return value;
 }
 
 std::string PptxBuilder::EscapeXml(

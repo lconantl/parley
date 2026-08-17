@@ -12,8 +12,7 @@ class ParleyBot
 {
 public:
 	explicit ParleyBot(
-		const Config& config
-	);
+		const Config& config);
 
 	void Run() const;
 
@@ -21,23 +20,23 @@ private:
 	void SetupHandlers();
 
 	void HandleMessage(
-		const TgBot::Message::Ptr& message
-	) const;
+		const TgBot::Message::Ptr& message) const;
 
 	[[nodiscard]]
 	bool IsUserAllowed(
-		int64_t userId
-	) const;
+		int64_t userId) const;
 
 	void HandleBfoSearch(
 		int64_t chatId,
-		const std::string& query
-	) const;
+		const std::string& query) const;
+
+	void SendCompanyProfile(
+		int64_t chatId,
+		int organizationId) const;
 
 	[[nodiscard]]
 	static bool IsCommand(
-		const std::string& text
-	);
+		const std::string& text);
 
 	TgBot::Bot m_bot;
 	const Config& m_config;
