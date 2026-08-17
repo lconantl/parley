@@ -2,6 +2,14 @@
   "name": "parley",
   "version": "1.0.0",
   "dependencies": [
-    "tgbot-cpp"
+    "tgbot-cpp",
+    {
+      "name": "cpp-httplib",
+      "features": [
+        "openssl"
+      ]
+    },
+    "nlohmann-json",
+    "libzip"
   ]
 }
