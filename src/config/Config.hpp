@@ -7,35 +7,20 @@
 class Config
 {
 public:
-	static Config Load(
-		const std::filesystem::path& filePath = "../.env");
+	static Config Load(const std::filesystem::path& filePath = "../.env");
 
-	[[nodiscard]]
 	const std::string& GetBotToken() const;
-
-	[[nodiscard]]
 	const std::vector<std::string>& GetAllowedUsers() const;
-
-	[[nodiscard]]
 	const std::string& GetBfoBaseUrl() const;
-
-	[[nodiscard]]
 	const std::string& GetBfoSearchPath() const;
-
-	[[nodiscard]]
 	long GetBfoPageSize() const;
-
-	[[nodiscard]]
 	long GetBfoConnectTimeoutSec() const;
-
-	[[nodiscard]]
 	long GetBfoReadTimeoutSec() const;
-
-	[[nodiscard]]
 	long GetBfoWriteTimeoutSec() const;
-
-	[[nodiscard]]
 	const std::string& GetBfoUserAgent() const;
+	const std::string& GetPolzaBaseUrl() const;
+	const std::string& GetPolzaApiKey() const;
+	const std::string& GetPolzaModel() const;
 
 private:
 	Config(
@@ -47,7 +32,10 @@ private:
 		long bfoConnectTimeoutSec,
 		long bfoReadTimeoutSec,
 		long bfoWriteTimeoutSec,
-		std::string bfoUserAgent);
+		std::string bfoUserAgent,
+		std::string polzaBaseUrl,
+		std::string polzaApiKey,
+		std::string polzaModel);
 
 	std::string m_botToken;
 	std::vector<std::string> m_allowedUsers;
@@ -62,4 +50,8 @@ private:
 	long m_bfoWriteTimeoutSec;
 
 	std::string m_bfoUserAgent;
+
+	std::string m_polzaBaseUrl;
+	std::string m_polzaApiKey;
+	std::string m_polzaModel;
 };

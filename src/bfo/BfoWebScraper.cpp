@@ -4,12 +4,15 @@
 
 #include <nlohmann/json.hpp>
 
+#include <algorithm>
 #include <cctype>
+#include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <thread>
 
 namespace
 {
@@ -211,6 +214,10 @@ BfoInfo ParseBfoInfo(
 
 constexpr const char* NBO_API_PREFIX = "/nbo";
 
+constexpr int MAX_HTTP_ATTEMPTS = 3;
+constexpr std::chrono::milliseconds RETRY_BACKOFF[] = {
+	std::chrono::milliseconds(800), std::chrono::milliseconds(1600)};
+
 std::optional<std::int64_t> OptInt64Value(
 	const nlohmann::json& json,
 	const char* key)
@@ -273,6 +280,30 @@ nlohmann::json OptJsonBlock(
 	}
 
 	return *iterator;
+}
+
+nlohmann::json CollectExtra(
+	const nlohmann::json& json,
+	const std::vector<std::string>& knownKeys)
+{
+	if (!json.is_object())
+	{
+		return nlohmann::json::object();
+	}
+
+	nlohmann::json extra = nlohmann::json::object();
+
+	for (const auto& [key, value] : json.items())
+	{
+		if (
+			std::find(knownKeys.begin(), knownKeys.end(), key)
+			== knownKeys.end())
+		{
+			extra[key] = value;
+		}
+	}
+
+	return extra;
 }
 
 template <typename T, typename ParseFn>
@@ -413,6 +444,10 @@ BfoCorrection ParseCorrection(
 	result.clarification = ParseOptional<BfoClarification>(json, "clarification", ParseClarification);
 	result.periodType = OptIntValue(json, "periodType");
 
+	result.extra = CollectExtra(
+		json,
+		{"id", "bfoOrganizationInfo", "balance", "financialResult", "capitalChange", "fundsMovement", "correctionVersion", "requiredAudit", "datePresent", "prBn", "knd", "auditReport", "clarification", "periodType"});
+
 	return result;
 }
 
@@ -499,7 +534,7 @@ SearchResponse BfoWebScraper::Search(
 		+ "&size="
 		+ std::to_string(m_pageSize);
 
-	const HttpResponse response = m_httpClient.Get(
+	const HttpResponse response = GetWithRetry(
 		path,
 		{
 			{"Accept", "application/json"},
@@ -588,10 +623,94 @@ std::vector<BfoPeriodReport> BfoWebScraper::GetOrganizationBfoHistory(
 	return result;
 }
 
+BfoDetailBreakdown BfoWebScraper::GetReportDetails(
+	const int correctionId,
+	const std::string& reportType) const
+{
+	const std::string snakeCaseType = ReportTypeToSnakeCase(reportType);
+
+	const std::string path = snakeCaseType == "funds_movement"
+		? "/details/funds_movement/v2?id=" + std::to_string(correctionId)
+		: "/details/" + snakeCaseType + "?id=" + std::to_string(correctionId);
+
+	return ParseDetailBreakdown(
+		FetchNboJson(path));
+}
+
+nlohmann::json BfoWebScraper::GetSuccessorInfo(
+	const int organizationId) const
+{
+	return FetchNboJson(
+		"/organizations/successor?organizationId=" + std::to_string(organizationId));
+}
+
+std::string BfoWebScraper::ReportTypeToSnakeCase(
+	const std::string& reportType)
+{
+	std::string result;
+
+	result.reserve(reportType.size() + 4);
+
+	for (const char character : reportType)
+	{
+		if (std::isupper(static_cast<unsigned char>(character)))
+		{
+			result += '_';
+			result += static_cast<char>(std::tolower(static_cast<unsigned char>(character)));
+		}
+		else
+		{
+			result += character;
+		}
+	}
+
+	return result;
+}
+
+BfoDetailBreakdown BfoWebScraper::ParseDetailBreakdown(
+	const nlohmann::json& root)
+{
+	BfoDetailBreakdown result;
+
+	if (!root.is_object())
+	{
+		return result;
+	}
+
+	for (const auto& [parentCodeKey, items] : root.items())
+	{
+		if (!items.is_array())
+		{
+			continue;
+		}
+
+		std::vector<BfoDetailItem> parsedItems;
+		parsedItems.reserve(items.size());
+
+		for (const auto& item : items)
+		{
+			BfoDetailItem detailItem;
+
+			detailItem.parentCode = OptInt(item, "parentCode", 0);
+			detailItem.codeName = RequiredString(item, "codeName");
+			detailItem.code = OptInt(item, "code", 0);
+			detailItem.expl = OptString(item, "expl");
+			detailItem.current = OptDouble(item, "current");
+			detailItem.previous = OptDouble(item, "previous");
+
+			parsedItems.push_back(std::move(detailItem));
+		}
+
+		result.emplace(parentCodeKey, std::move(parsedItems));
+	}
+
+	return result;
+}
+
 nlohmann::json BfoWebScraper::FetchNboJson(
 	const std::string& path) const
 {
-	const HttpResponse response = m_httpClient.Get(
+	const HttpResponse response = GetWithRetry(
 		NBO_API_PREFIX + path,
 		{
 			{"Accept", "application/json"},
@@ -628,6 +747,37 @@ nlohmann::json BfoWebScraper::FetchNboJson(
 			std::string(
 				"Не удалось разобрать ответ БФО: ")
 			+ exception.what());
+	}
+}
+
+HttpResponse BfoWebScraper::GetWithRetry(
+	const std::string& path,
+	const std::unordered_map<std::string, std::string>& headers) const
+{
+	for (int attempt = 1;; ++attempt)
+	{
+		try
+		{
+			return m_httpClient.Get(path, headers);
+		}
+		catch (const std::exception& exception)
+		{
+			if (attempt >= MAX_HTTP_ATTEMPTS)
+			{
+				throw;
+			}
+
+			std::cerr
+				<< "[BFO] Попытка " << attempt << " не удалась ("
+				<< exception.what()
+				<< "), повтор через "
+				<< RETRY_BACKOFF[attempt - 1].count()
+				<< " мс"
+				<< std::endl;
+
+			std::this_thread::sleep_for(
+				RETRY_BACKOFF[attempt - 1]);
+		}
 	}
 }
 
@@ -680,6 +830,10 @@ BfoOrganizationProfile BfoWebScraper::ParseOrganizationProfile(
 	result.authorizedCapital = OptDouble(root, "authorizedCapital");
 	result.active = OptBool(root, "active", false);
 
+	result.extra = CollectExtra(
+		root,
+		{"id", "inn", "shortName", "ogrn", "index", "region", "district", "city", "settlement", "street", "house", "building", "office", "okved2", "okopf", "bfo", "okato", "okpo", "okfs", "statusCode", "statusDate", "msp", "kpp", "fullName", "registrationDate", "location", "authorizedCapital", "active"});
+
 	return result;
 }
 
@@ -731,6 +885,10 @@ BfoPeriodReport BfoWebScraper::ParsePeriodReport(
 	}
 
 	result.published = OptBool(item, "published", false);
+
+	result.extra = CollectExtra(
+		item,
+		{"id", "period", "publication", "actualBfoDate", "gainSum", "knd", "hasAz", "hasKs", "actualCorrectionNumber", "actualCorrectionDate", "publishedCorrectionNumber", "publishedCorrectionDate", "actives", "isCb", "mspCategory", "organizationInfo", "typeCorrections", "published"});
 
 	return result;
 }

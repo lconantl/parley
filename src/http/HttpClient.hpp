@@ -25,6 +25,13 @@ public:
 		const std::string& path,
 		const std::unordered_map<std::string, std::string>& headers = {}) const;
 
+	[[nodiscard]]
+	HttpResponse Post(
+		const std::string& path,
+		const std::string& body,
+		const std::string& contentType,
+		const std::unordered_map<std::string, std::string>& headers = {}) const;
+
 private:
 	std::string m_baseUrl;
 	long m_connectTimeoutSec;

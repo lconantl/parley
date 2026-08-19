@@ -5,7 +5,20 @@
 #include <cstdint>
 #include <optional>
 #include <string>
+#include <unordered_map>
 #include <vector>
+
+struct BfoDetailItem
+{
+	int parentCode = 0;
+	std::string codeName;
+	int code = 0;
+	std::optional<std::string> expl;
+	std::optional<double> current;
+	std::optional<double> previous;
+};
+
+using BfoDetailBreakdown = std::unordered_map<std::string, std::vector<BfoDetailItem>>;
 
 struct BfoCodeName
 {
@@ -73,6 +86,10 @@ struct BfoOrganizationProfile
 	std::optional<BfoLocation> location;
 	std::optional<double> authorizedCapital;
 	bool active = false;
+
+	// Всё, что API вернул в корне объекта, но чего нет среди полей выше —
+	// чтобы ни один факт из ответа сервера не терялся молча.
+	nlohmann::json extra;
 };
 
 struct BfoOrganizationInfoRef
@@ -132,6 +149,8 @@ struct BfoCorrection
 	std::optional<BfoAuditReport> auditReport;
 	std::optional<BfoClarification> clarification;
 	std::optional<int> periodType;
+
+	nlohmann::json extra;
 };
 
 struct BfoTypeCorrection
@@ -160,4 +179,6 @@ struct BfoPeriodReport
 	BfoOrganizationInfoRef organizationInfo;
 	std::vector<BfoTypeCorrection> typeCorrections;
 	bool published = false;
+
+	nlohmann::json extra;
 };

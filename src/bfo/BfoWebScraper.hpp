@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <optional>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 class Config;
@@ -105,6 +106,15 @@ public:
 	std::vector<BfoPeriodReport> GetOrganizationBfoHistory(
 		int organizationId) const;
 
+	[[nodiscard]]
+	BfoDetailBreakdown GetReportDetails(
+		int correctionId,
+		const std::string& reportType) const;
+
+	[[nodiscard]]
+	nlohmann::json GetSuccessorInfo(
+		int organizationId) const;
+
 private:
 	[[nodiscard]]
 	static SearchResponse ParseSearchResponse(
@@ -125,8 +135,21 @@ private:
 		const nlohmann::json& item);
 
 	[[nodiscard]]
+	static BfoDetailBreakdown ParseDetailBreakdown(
+		const nlohmann::json& root);
+
+	[[nodiscard]]
+	static std::string ReportTypeToSnakeCase(
+		const std::string& reportType);
+
+	[[nodiscard]]
 	nlohmann::json FetchNboJson(
 		const std::string& path) const;
+
+	[[nodiscard]]
+	HttpResponse GetWithRetry(
+		const std::string& path,
+		const std::unordered_map<std::string, std::string>& headers) const;
 
 	[[nodiscard]]
 	static std::string StripTags(
