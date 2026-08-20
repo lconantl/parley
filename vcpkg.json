@@ -10,6 +10,7 @@
       ]
     },
     "nlohmann-json",
-    "libzip"
+    "libzip",
+    "libharu"
   ]
 }
