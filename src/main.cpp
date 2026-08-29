@@ -1,5 +1,5 @@
-#include "bot/ParleyBot.hpp"
 #include "config/Config.hpp"
+#include "config/EnvLoader.hpp"
 #include "console/ConsoleEncoding.hpp"
 #include <iostream>
 
@@ -10,11 +10,7 @@ int main()
 	try
 	{
 		std::cout << "Parley bot" << std::endl;
-
-		const Config config = Config::Load();
-		const ParleyBot bot(config);
-
-		bot.Run();
+		const Config config = Load(EnvLoader::FILE_NAME);
 	}
 	catch (const std::exception& exception)
 	{
