@@ -22,7 +22,13 @@ list(REMOVE_ITEM SRC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 add_library(core STATIC ${SRC_FILES})
 
 target_include_directories(core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_link_libraries(core PUBLIC TgBot::TgBot httplib::httplib nlohmann_json::nlohmann_json libzip::zip unofficial::libharu::hpdf)
+target_link_libraries(core PUBLIC
+        TgBot::TgBot
+        httplib::httplib
+        nlohmann_json::nlohmann_json
+        libzip::zip
+        unofficial::libharu::hpdf
+)
 
 if (MSVC)
     target_compile_options(core PRIVATE /W4 /utf-8)
