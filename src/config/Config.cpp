@@ -14,6 +14,8 @@ constexpr std::string_view POLZA_BASE_URL = "POLZA_BASE_URL";
 constexpr std::string_view POLZA_API_KEY = "POLZA_API_KEY";
 constexpr std::string_view POLZA_MODEL = "POLZA_MODEL";
 constexpr std::string_view CHECKO_API_KEY = "CHECKO_API_KEY";
+constexpr std::string_view DADATA_API_KEY = "DADATA_API_KEY";
+constexpr std::string_view DADATA_SECRET_KEY = "DADATA_SECRET_KEY";
 
 constexpr char LIST_SEPARATOR = ',';
 
@@ -110,6 +112,8 @@ Config Config::LoadFromEnv(const std::filesystem::path& path)
 	config.m_polzaApiKey = RequireString(data, POLZA_API_KEY);
 	config.m_polzaModel = RequireString(data, POLZA_MODEL);
 	config.m_checkoApiKey = RequireString(data, CHECKO_API_KEY);
+	config.m_daDataApiKey = RequireString(data, DADATA_API_KEY);
+	config.m_daDataSecretKey = RequireString(data, DADATA_SECRET_KEY);
 
 	return config;
 }
@@ -147,4 +151,14 @@ const std::string& Config::GetPolzaModel() const
 const std::string& Config::GetCheckoApiKey() const
 {
 	return m_checkoApiKey;
+}
+
+const std::string& Config::GetDaDataApiKey() const
+{
+	return m_daDataApiKey;
+}
+
+const std::string& Config::GetDaDataSecretKey() const
+{
+	return m_daDataSecretKey;
 }

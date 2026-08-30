@@ -18,6 +18,8 @@ public:
 	const std::string& GetPolzaApiKey() const;
 	const std::string& GetPolzaModel() const;
 	const std::string& GetCheckoApiKey() const;
+	const std::string& GetDaDataApiKey() const;
+	const std::string& GetDaDataSecretKey() const;
 
 private:
 	Config() = default;
@@ -28,4 +30,6 @@ private:
 	std::string m_polzaApiKey;
 	std::string m_polzaModel;
 	std::string m_checkoApiKey;
+	std::string m_daDataApiKey;
+	std::string m_daDataSecretKey;
 };
