@@ -23,21 +23,21 @@ int main()
 		const auto apiClient = std::make_shared<CheckoApiClient>(config.GetCheckoApiKey());
 
 		// 1. Инициализация темы
-		Theme theme = CreateStrategyPartnersTheme("./assets"); //[cite: 4]
+		Theme theme = CreateStrategyPartnersTheme("./assets");
 
 		// 2. Создание макета слайда
 		CardGridSlideContent content;
-		content.title = "Направления работы";			   //[cite: 4]
-		content.columnCount = 3;						   //[cite: 4]
-		content.cards = {{"Стратегия", "Описание блока"}}; //[cite: 4]
+		content.title = "Направления работы";
+		content.columnCount = 3;
+		content.cards = {{"Стратегия", "Описание блока"}};
 
 		// 3. Формирование презентации
 		Deck deck;
-		deck.title = "Обучающая презентация";  //[cite: 4]
-		deck.slides.push_back(Slide{content}); //[cite: 4]
+		deck.title = "Обучающая презентация";
+		deck.slides.push_back(Slide{content});
 
 		// 4. Сохранение PDF
-		PdfGenerator::Generate(deck, theme, "output.pdf"); //[cite: 4]
+		PdfGenerator::Generate(deck, theme, "output.pdf");
 
 		// const CompanyViewModel viewModel(apiClient);
 		// const auto company = viewModel.LoadCompany("1215139170");

@@ -120,9 +120,9 @@ std::map<AssetRole, std::filesystem::path> CreateAssetMap(const std::filesystem:
 	return {
 		{AssetRole::Logo, imagesRoot / "logo.png"},
 		{AssetRole::LogoInverse, imagesRoot / "logo-inverse.png"},
-		{AssetRole::TitleDecoration, imagesRoot / "decoration-title.png"},
-		{AssetRole::SideDecoration, imagesRoot / "decoration-side.png"},
-		{AssetRole::FooterDecoration, imagesRoot / "decoration-footer.png"}};
+		{AssetRole::TitleDecoration, imagesRoot / "title-decoration.png"},
+		{AssetRole::SideDecoration, imagesRoot / "side-decoration.png"},
+		{AssetRole::FooterDecoration, imagesRoot / "footer-decoration.png"}};
 }
 } // namespace
 
