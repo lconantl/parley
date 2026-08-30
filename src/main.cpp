@@ -6,6 +6,7 @@
 #include "pdf/render/PdfGenerator.hpp"
 #include "pdf/theme/StrategyPartnersTheme.hpp"
 #include "view/ConsoleCompanyStatisticsView.hpp"
+#include "viewmodel/CompanyProfileViewModel.hpp"
 #include "viewmodel/CompanyViewModel.hpp"
 
 #include <iostream>
@@ -39,13 +40,24 @@ int main()
 		// // 4. Сохранение PDF
 		// PdfGenerator::Generate(deck, theme, "output.pdf");
 
-		const CompanyViewModel viewModel(apiClient);
-		const auto company = viewModel.LoadCompany("1215139170");
-		ConsoleCompanyStatisticsView view;
-		view.Show(*company, apiClient->GetStatistics());
+		const auto dadataClient = std::make_shared<DaDataApiClient>(
+			config.GetDaDataApiKey(),
+			config.GetDaDataSecretKey());
 
-		// company->SaveToJson("data.json");
-		// std::cout << "Данные успешно сохранены в data.json" << std::endl;
+		const CompanyProfileViewModel profileViewModel(dadataClient);
+
+		Company company("1215180595");
+		profileViewModel.Load(company);
+
+		const CompanyProfile profile = company.GetProfile();
+		std::cout << profile.registry.fullName << std::endl;
+		std::cout << profile.brand.summary << std::endl;
+		std::cout << profile.employees.count << std::endl;
+
+		// const auto company = viewModel.LoadCompany("1215139170");
+		// ConsoleCompanyStatisticsView view;
+		// view.Show(*company, apiClient->GetStatistics());
+
 		// const ParleyBot bot(config.GetBotToken());
 		// bot.Run();
 	}

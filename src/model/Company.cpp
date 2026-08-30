@@ -1,6 +1,5 @@
 #include "Company.hpp"
 
-#include <fstream>
 #include <iostream>
 #include <stdexcept>
 #include <utility>
@@ -25,6 +24,15 @@ void AssertIsMethodExists(
 	}
 }
 
+void AssertIsProfileLoaded(const std::optional<CompanyProfile>& profile)
+{
+	if (!profile.has_value())
+	{
+		throw std::out_of_range("Профиль организации не загружен");
+	}
+}
+} // namespace
+
 void AssertIsNotEmpty(const std::string& id)
 {
 	if (id.empty())
@@ -33,31 +41,15 @@ void AssertIsNotEmpty(const std::string& id)
 	}
 }
 
-void AssertIsFileOpen(const std::ofstream& file, const std::filesystem::path& path)
-{
-	if (!file.is_open())
-	{
-		throw std::runtime_error("Не удалось открыть файл для записи: " + path.string());
-	}
-}
-
-void AssertIsMetricsPresent(const bool hasMetrics)
-{
-	if (!hasMetrics)
-	{
-		throw std::logic_error("Метрики компании не установлены");
-	}
-}
-} // namespace
-
 Company::Company(std::string id)
 	: m_id(std::move(id))
-	, m_metrics()
 {
 	AssertIsNotEmpty(m_id);
 }
 
-void Company::SetData(const std::string& method, nlohmann::json data)
+void Company::SetData(
+	const std::string& method,
+	nlohmann::json data)
 {
 	AssertIsMethodNameValid(method);
 	std::lock_guard lock(m_mutex);
@@ -79,24 +71,23 @@ const nlohmann::json& Company::GetData(const std::string& method) const
 	return m_data.at(method);
 }
 
-bool Company::HasMetrics() const
+bool Company::HasProfile() const
 {
 	std::lock_guard lock(m_mutex);
-	return m_hasMetrics;
+	return m_profile.has_value();
 }
 
-void Company::SetMetrics(CompanyMetrics metrics)
+void Company::SetProfile(CompanyProfile profile)
 {
 	std::lock_guard lock(m_mutex);
-	m_metrics = std::move(metrics);
-	m_hasMetrics = true;
+	m_profile = std::move(profile);
 }
 
-const CompanyMetrics& Company::GetMetrics() const
+CompanyProfile Company::GetProfile() const
 {
 	std::lock_guard lock(m_mutex);
-	AssertIsMetricsPresent(m_hasMetrics);
-	return m_metrics;
+	AssertIsProfileLoaded(m_profile);
+	return m_profile.value();
 }
 
 const std::string& Company::GetIdentifier() const noexcept
@@ -119,20 +110,4 @@ void Company::PrintJson() const
 		std::cout << "========== " << method << " ==========" << std::endl;
 		std::cout << data.dump(5) << std::endl;
 	}
-}
-
-void Company::SaveToJson(const std::filesystem::path& path) const
-{
-	std::lock_guard lock(m_mutex);
-	nlohmann::json outputData;
-
-	for (const auto& [method, data] : m_data)
-	{
-		outputData[method] = data;
-	}
-
-	std::ofstream file(path);
-	AssertIsFileOpen(file, path);
-
-	file << outputData.dump(4) << std::endl;
 }
