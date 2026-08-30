@@ -1,5 +1,6 @@
 #pragma once
 
+#include <mutex>
 #include <nlohmann/json.hpp>
 
 #include <string>
@@ -16,8 +17,10 @@ public:
 
 	const std::string& GetIdentifier() const noexcept;
 	std::size_t GetMethodCount() const noexcept;
+	void PrintJson() const;
 
 private:
 	std::string m_id;
 	std::unordered_map<std::string, nlohmann::json> m_data;
+	mutable std::mutex m_mutex;
 };

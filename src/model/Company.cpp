@@ -1,4 +1,6 @@
 #include "Company.hpp"
+
+#include <iostream>
 #include <stdexcept>
 #include <utility>
 
@@ -37,24 +39,27 @@ Company::Company(std::string id)
 	AssertIsNotEmpty(m_id);
 }
 
-void Company::SetData(const std::string& method, nlohmann::json data)
+void Company::SetData(
+	const std::string& method,
+	nlohmann::json data)
 {
 	AssertIsMethodNameValid(method);
+	std::lock_guard lock(m_mutex);
 	m_data[method] = std::move(data);
 }
 
 bool Company::HasData(const std::string& method) const
 {
 	AssertIsMethodNameValid(method);
-
+	std::lock_guard lock(m_mutex);
 	return m_data.contains(method);
 }
 
 const nlohmann::json& Company::GetData(const std::string& method) const
 {
 	AssertIsMethodNameValid(method);
+	std::lock_guard lock(m_mutex);
 	AssertIsMethodExists(m_data, method);
-
 	return m_data.at(method);
 }
 
@@ -65,5 +70,17 @@ const std::string& Company::GetIdentifier() const noexcept
 
 std::size_t Company::GetMethodCount() const noexcept
 {
+	std::lock_guard lock(m_mutex);
 	return m_data.size();
+}
+
+void Company::PrintJson() const
+{
+	std::lock_guard lock(m_mutex);
+
+	for (const auto& [method, data] : m_data)
+	{
+		std::cout << "========== " << method << " ==========" << std::endl;
+		std::cout << data.dump(5) << std::endl;
+	}
 }
