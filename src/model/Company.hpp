@@ -1,8 +1,8 @@
 #pragma once
 
+#include <filesystem>
 #include <mutex>
 #include <nlohmann/json.hpp>
-
 #include <string>
 #include <unordered_map>
 
@@ -17,7 +17,9 @@ public:
 
 	const std::string& GetIdentifier() const noexcept;
 	std::size_t GetMethodCount() const noexcept;
+
 	void PrintJson() const;
+	void SaveToJson(const std::filesystem::path& path) const;
 
 private:
 	std::string m_id;

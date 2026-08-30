@@ -1,11 +1,19 @@
 #include "Company.hpp"
-
+#include <fstream>
 #include <iostream>
 #include <stdexcept>
 #include <utility>
 
 namespace
 {
+void AssertIsFileOpen(const std::ofstream& file, const std::filesystem::path& path)
+{
+	if (!file.is_open())
+	{
+		throw std::runtime_error("Не удалось открыть файл для записи: " + path.string());
+	}
+}
+
 void AssertIsMethodNameValid(const std::string& method)
 {
 	if (method.empty())
@@ -81,6 +89,22 @@ void Company::PrintJson() const
 	for (const auto& [method, data] : m_data)
 	{
 		std::cout << "========== " << method << " ==========" << std::endl;
-		std::cout << data.dump(5) << std::endl;
+		std::cout << data.dump(4) << std::endl;
 	}
+}
+
+void Company::SaveToJson(const std::filesystem::path& path) const
+{
+	std::lock_guard lock(m_mutex);
+
+	nlohmann::json outputData;
+	for (const auto& [method, data] : m_data)
+	{
+		outputData[method] = data;
+	}
+
+	std::ofstream file(path);
+	AssertIsFileOpen(file, path);
+
+	file << outputData.dump(4);
 }
