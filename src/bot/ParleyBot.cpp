@@ -33,7 +33,7 @@ std::unique_ptr<TgBot::Bot> CreateBot(const std::string& token)
 
 std::string BuildDescriptionText()
 {
-	return "Привет, я бот <b>Parley</b> для анализа компаний."
+	return "Привет, я бот <b>Parley</b> для анализа компаний. "
 		   "Чтобы начать анализ - пришли ИНН компании и её название.\n"
 		   "\n"
 		   "Доступны следующие команды:\n"
@@ -152,7 +152,6 @@ ParleyBot::~ParleyBot() = default;
 
 void ParleyBot::Run() const
 {
-	m_bot->getApi().deleteWebhook();
 	PublishCommandMenu(m_bot->getApi());
 	LogStartup(m_bot->getApi());
 
