@@ -15,6 +15,7 @@ find_package(httplib CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(libzip CONFIG REQUIRED)
 find_package(unofficial-libharu CONFIG REQUIRED)
+find_package(CURL REQUIRED)
 
 file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*.cpp")
 list(REMOVE_ITEM SRC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
@@ -28,6 +29,7 @@ target_link_libraries(core PUBLIC
         nlohmann_json::nlohmann_json
         libzip::zip
         unofficial::libharu::hpdf
+        CURL::libcurl
 )
 
 if (MSVC)
