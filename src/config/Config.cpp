@@ -13,6 +13,7 @@ constexpr std::string_view ALLOWED_USERS = "ALLOWED_USERS";
 constexpr std::string_view POLZA_BASE_URL = "POLZA_BASE_URL";
 constexpr std::string_view POLZA_API_KEY = "POLZA_API_KEY";
 constexpr std::string_view POLZA_MODEL = "POLZA_MODEL";
+constexpr std::string_view CHECKO_API_KEY = "CHECKO_API_KEY";
 
 constexpr char LIST_SEPARATOR = ',';
 
@@ -108,11 +109,42 @@ Config Config::LoadFromEnv(const std::filesystem::path& path)
 	config.m_polzaBaseUrl = RequireUrl(data, POLZA_BASE_URL);
 	config.m_polzaApiKey = RequireString(data, POLZA_API_KEY);
 	config.m_polzaModel = RequireString(data, POLZA_MODEL);
+	config.m_checkoApiKey = RequireString(data, CHECKO_API_KEY);
 
 	return config;
+}
+
+const std::string& Config::GetBotToken() const
+{
+	return m_botToken;
+}
+
+const std::vector<std::int64_t>& Config::GetAllowedUsers() const
+{
+	return m_allowedUsers;
 }
 
 bool Config::IsUserAllowed(const std::int64_t userId) const
 {
 	return std::ranges::find(m_allowedUsers, userId) != m_allowedUsers.end();
+}
+
+const std::string& Config::GetPolzaBaseUrl() const
+{
+	return m_polzaBaseUrl;
+}
+
+const std::string& Config::GetPolzaApiKey() const
+{
+	return m_polzaApiKey;
+}
+
+const std::string& Config::GetPolzaModel() const
+{
+	return m_polzaModel;
+}
+
+const std::string& Config::GetCheckoApiKey() const
+{
+	return m_checkoApiKey;
 }

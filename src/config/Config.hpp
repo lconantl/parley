@@ -11,32 +11,13 @@ class Config
 public:
 	static Config LoadFromEnv(const std::filesystem::path& path = EnvLoader::FILE_NAME);
 
-	const std::string& GetBotToken() const noexcept
-	{
-		return m_botToken;
-	}
-
-	const std::vector<std::int64_t>& GetAllowedUsers() const noexcept
-	{
-		return m_allowedUsers;
-	}
-
+	const std::string& GetBotToken() const;
+	const std::vector<std::int64_t>& GetAllowedUsers() const;
 	bool IsUserAllowed(std::int64_t userId) const;
-
-	const std::string& GetPolzaBaseUrl() const noexcept
-	{
-		return m_polzaBaseUrl;
-	}
-
-	const std::string& GetPolzaApiKey() const noexcept
-	{
-		return m_polzaApiKey;
-	}
-
-	const std::string& GetPolzaModel() const noexcept
-	{
-		return m_polzaModel;
-	}
+	const std::string& GetPolzaBaseUrl() const;
+	const std::string& GetPolzaApiKey() const;
+	const std::string& GetPolzaModel() const;
+	const std::string& GetCheckoApiKey() const;
 
 private:
 	Config() = default;
@@ -46,4 +27,5 @@ private:
 	std::string m_polzaBaseUrl;
 	std::string m_polzaApiKey;
 	std::string m_polzaModel;
+	std::string m_checkoApiKey;
 };
