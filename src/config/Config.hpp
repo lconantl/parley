@@ -1,27 +1,49 @@
 #pragma once
 
-#include <chrono>
+#include "EnvLoader.hpp"
+#include <cstdint>
 #include <filesystem>
 #include <string>
 #include <vector>
 
-struct BotConfig
+class Config
 {
-	std::string token;
-	std::vector<std::string> allowedUsers;
-};
+public:
+	static Config LoadFromEnv(const std::filesystem::path& path = EnvLoader::FILE_NAME);
 
-struct PolzaConfig
-{
-	std::string baseUrl;
-	std::string apiKey;
-	std::string model;
-};
+	const std::string& GetBotToken() const noexcept
+	{
+		return m_botToken;
+	}
 
-struct Config
-{
-	BotConfig bot;
-	PolzaConfig polza;
-};
+	const std::vector<std::int64_t>& GetAllowedUsers() const noexcept
+	{
+		return m_allowedUsers;
+	}
 
-Config Load(const std::filesystem::path& path);
+	bool IsUserAllowed(std::int64_t userId) const;
+
+	const std::string& GetPolzaBaseUrl() const noexcept
+	{
+		return m_polzaBaseUrl;
+	}
+
+	const std::string& GetPolzaApiKey() const noexcept
+	{
+		return m_polzaApiKey;
+	}
+
+	const std::string& GetPolzaModel() const noexcept
+	{
+		return m_polzaModel;
+	}
+
+private:
+	Config() = default;
+
+	std::string m_botToken;
+	std::vector<std::int64_t> m_allowedUsers;
+	std::string m_polzaBaseUrl;
+	std::string m_polzaApiKey;
+	std::string m_polzaModel;
+};

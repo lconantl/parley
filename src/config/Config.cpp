@@ -1,72 +1,118 @@
 #include "Config.hpp"
-#include "EnvLoader.hpp"
+
+#include <algorithm>
+#include <charconv>
 #include <stdexcept>
-#include <utility>
 
 namespace
 {
-std::string GetRequired(const EnvLoader::EnvData& data, const std::string& key)
+constexpr std::string_view TAG = "[Config]\t\t";
+
+constexpr std::string_view BOT_TOKEN = "BOT_TOKEN";
+constexpr std::string_view ALLOWED_USERS = "ALLOWED_USERS";
+constexpr std::string_view POLZA_BASE_URL = "POLZA_BASE_URL";
+constexpr std::string_view POLZA_API_KEY = "POLZA_API_KEY";
+constexpr std::string_view POLZA_MODEL = "POLZA_MODEL";
+
+constexpr char LIST_SEPARATOR = ',';
+
+std::runtime_error MakeError(const std::string_view key, const std::string& message)
 {
-	const auto iterator = data.find(key);
-
-	if (iterator == data.end())
-	{
-		throw std::runtime_error("Отсутствует переменная окружения: " + key);
-	}
-
-	return iterator->second;
+	return std::runtime_error(std::string(TAG) + std::string(key) + ": " + message);
 }
 
-long GetLong(const EnvLoader::EnvData& data, const std::string& key)
+std::string RequireString(const EnvLoader::EnvData& data, const std::string_view key)
 {
-	try
+	const auto it = data.find(std::string(key));
+	if (it == data.end())
 	{
-		return std::stol(GetRequired(data, key));
+		throw MakeError(key, "переменная не задана");
 	}
-	catch (...)
+
+	if (it->second.empty())
 	{
-		throw std::runtime_error("Некорректное числовое значение: " + key);
+		throw MakeError(key, "значение пустое");
 	}
+
+	return it->second;
 }
 
-std::vector<std::string> ParseUsers(const std::string& raw)
+std::string RequireUrl(const EnvLoader::EnvData& data, const std::string_view key)
 {
-	std::vector<std::string> result;
-	std::size_t start = 0;
-
-	while (start < raw.size())
+	std::string url = RequireString(data, key);
+	if (!url.starts_with("http://") && !url.starts_with("https://"))
 	{
-		const auto comma = raw.find(',', start);
+		throw MakeError(key, "ожидается http:// или https://, получено '" + url + "'");
+	}
 
-		const auto length = comma == std::string::npos
-			? raw.size() - start
-			: comma - start;
+	while (url.ends_with('/'))
+	{
+		url.pop_back();
+	}
 
-		if (length > 0)
+	return url;
+}
+
+std::int64_t ToNumber(const std::string_view key, const std::string& item)
+{
+	std::int64_t number = 0;
+	const char* const begin = item.data();
+	const char* const end = item.data() + item.size();
+
+	const auto [stopped, error] = std::from_chars(begin, end, number);
+	if (error != std::errc{} || stopped != end || number <= 0)
+	{
+		throw MakeError(key, "ожидается положительное число, получено '" + item + "'");
+	}
+
+	return number;
+}
+
+std::vector<std::int64_t> RequireNumberList(const EnvLoader::EnvData& data, const std::string_view key)
+{
+	const auto raw = RequireString(data, key);
+
+	std::vector<std::int64_t> result;
+	size_t start = 0;
+
+	while (true)
+	{
+		const auto separatorPos = raw.find(LIST_SEPARATOR, start);
+		const auto end = separatorPos == std::string::npos ? raw.size() : separatorPos;
+
+		const auto item = raw.substr(start, end - start);
+		if (item.empty())
 		{
-			result.emplace_back(
-				raw.substr(
-					start,
-					length));
+			throw MakeError(key, "пустой элемент списка в '" + raw + "'");
 		}
 
-		if (comma == std::string::npos)
+		result.push_back(ToNumber(key, item));
+
+		if (separatorPos == std::string::npos)
 		{
-			break;
+			return result;
 		}
 
-		start = comma + 1;
+		start = separatorPos + 1;
 	}
-
-	return result;
 }
-
 } // namespace
 
-Config Load(const std::filesystem::path& path)
+Config Config::LoadFromEnv(const std::filesystem::path& path)
 {
-	const auto data = EnvLoader::Load(path);
-	EnvLoader::PrintMap(data);
+	const EnvLoader::EnvData data = EnvLoader::Load(path);
 
-	return Config();
+	Config config;
+	config.m_botToken = RequireString(data, BOT_TOKEN);
+	config.m_allowedUsers = RequireNumberList(data, ALLOWED_USERS);
+	config.m_polzaBaseUrl = RequireUrl(data, POLZA_BASE_URL);
+	config.m_polzaApiKey = RequireString(data, POLZA_API_KEY);
+	config.m_polzaModel = RequireString(data, POLZA_MODEL);
+
+	return config;
+}
+
+bool Config::IsUserAllowed(const std::int64_t userId) const
+{
+	return std::ranges::find(m_allowedUsers, userId) != m_allowedUsers.end();
 }

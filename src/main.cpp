@@ -10,7 +10,12 @@ int main()
 	try
 	{
 		std::cout << "Parley bot" << std::endl;
-		const Config config = Load(EnvLoader::FILE_NAME);
+		const Config config = Config::LoadFromEnv(EnvLoader::FILE_NAME);
+		std::cout << config.GetBotToken() << std::endl;
+		std::cout << config.GetAllowedUsers()[2] << std::endl;
+		std::cout << config.GetPolzaBaseUrl() << std::endl;
+		std::cout << config.GetPolzaApiKey() << std::endl;
+		std::cout << config.GetPolzaModel() << std::endl;
 	}
 	catch (const std::exception& exception)
 	{
