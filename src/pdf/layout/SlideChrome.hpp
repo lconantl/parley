@@ -1,10 +1,9 @@
 #pragma once
 
-#include "drawlist/DrawList.hpp"
-#include "geometry/Geometry.hpp"
-#include "layout/ITextMeasurer.hpp"
-#include "theme/Theme.hpp"
-
+#include "ITextMeasurer.hpp"
+#include "pdf/graphics/DrawList.hpp"
+#include "pdf/model/Geometry.hpp"
+#include "pdf/theme/Theme.hpp"
 #include <string_view>
 
 Rect SlideBounds(const Theme& theme);
@@ -15,9 +14,9 @@ void EmitDecoration(DrawList& target, const Theme& theme, AssetRole role, const 
 void EmitFooter(DrawList& target, const Theme& theme, int pageNumber, bool inverse, const ITextMeasurer& measurer);
 
 double EmitSlideTitle(
-    DrawList& target,
-    const Theme& theme,
-    std::string_view title,
-    double maxWidth,
-    bool inverse,
-    const ITextMeasurer& measurer);
+	DrawList& target,
+	const Theme& theme,
+	std::string_view title,
+	double maxWidth,
+	bool inverse,
+	const ITextMeasurer& measurer);

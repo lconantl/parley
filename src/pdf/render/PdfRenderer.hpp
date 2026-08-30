@@ -1,7 +1,7 @@
 #pragma once
 
-#include "pdf/PdfDocument.hpp"
-#include "pdf/layout/DrawList.hpp"
+#include "PdfDocument.hpp"
+#include "pdf/graphics/DrawList.hpp"
 #include "pdf/theme/Theme.hpp"
 #include <hpdf.h>
 #include <map>

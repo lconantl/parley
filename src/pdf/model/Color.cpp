@@ -23,7 +23,7 @@ void AssertIsHexDigit(const char symbol)
 	}
 }
 
-unsigned ParseHexDigit(char symbol)
+unsigned ParseHexDigit(const char symbol)
 {
 	AssertIsHexDigit(symbol);
 

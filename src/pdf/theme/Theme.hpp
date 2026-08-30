@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../color/Color.hpp"
+#include "pdf/model/Color.hpp"
 #include <filesystem>
 #include <map>
 #include <vector>

@@ -31,7 +31,7 @@ double ContentWidth(const Metrics& metrics)
 	return metrics.page.width - metrics.page.marginLeft - metrics.page.marginRight;
 }
 
-double ColumnWidth(const Metrics& metrics, int columnCount)
+double ColumnWidth(const Metrics& metrics, const int columnCount)
 {
 	AssertIsPositiveColumnCount(columnCount);
 
@@ -40,7 +40,7 @@ double ColumnWidth(const Metrics& metrics, int columnCount)
 	return available / static_cast<double>(columnCount);
 }
 
-double ColumnOffset(const Metrics& metrics, int columnCount, int columnIndex)
+double ColumnOffset(const Metrics& metrics, const int columnCount, const int columnIndex)
 {
 	AssertIsPositiveColumnCount(columnCount);
 	AssertIsColumnIndexInRange(columnCount, columnIndex);

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "layout/Deck.hpp"
-#include "theme/Theme.hpp"
+#include "pdf/model/Deck.hpp"
+#include "pdf/theme/Theme.hpp"
 #include <filesystem>
 
 class PdfGenerator

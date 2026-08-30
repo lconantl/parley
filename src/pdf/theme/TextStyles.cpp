@@ -1,13 +1,13 @@
-#include "../theme/TextStyles.hpp"
+#include "TextStyles.hpp"
 
 namespace
 {
-double LineHeight(const Theme& theme, double fontSize)
+double LineHeight(const Theme& theme, const double fontSize)
 {
 	return fontSize * theme.type.lineHeightFactor;
 }
 
-TextStyle MakeStyle(const Theme& theme, FontRole font, double fontSize, const Color& color, TextAlign align)
+TextStyle MakeStyle(const Theme& theme, const FontRole font, const double fontSize, const Color& color, const TextAlign align)
 {
 	TextStyle style;
 	style.font = font;

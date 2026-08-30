@@ -1,5 +1,5 @@
 #include "PdfRenderer.hpp"
-#include "pdf/layout/DrawCommand.hpp"
+#include "../graphics/DrawCommand.hpp"
 #include <stdexcept>
 
 namespace

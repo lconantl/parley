@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../theme/Theme.hpp"
 #include "ITextMeasurer.hpp"
+#include "pdf/theme/Theme.hpp"
 #include <hpdf.h>
 #include <map>
 #include <string_view>

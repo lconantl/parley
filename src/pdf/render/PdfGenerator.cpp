@@ -1,11 +1,8 @@
 #include "PdfGenerator.hpp"
-
-#include "layout/DrawList.hpp"
-#include "layout/HaruTextMeasurer.hpp"
-#include "layout/SlideLayoutEngine.hpp"
-#include "pdf/PdfDocument.hpp"
-#include "render/PdfRenderer.hpp"
-
+#include "PdfDocument.hpp"
+#include "PdfRenderer.hpp"
+#include "pdf/layout/HaruTextMeasurer.hpp"
+#include "pdf/layout/SlideLayoutEngine.hpp"
 #include <hpdf.h>
 #include <map>
 

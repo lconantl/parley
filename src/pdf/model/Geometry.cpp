@@ -5,7 +5,7 @@
 
 namespace
 {
-    void AssertIsNonNegative(double value)
+    void AssertIsNonNegative(const double value)
     {
         if (value < 0.0)
         {
@@ -29,7 +29,7 @@ Point RectTopLeft(const Rect& rect)
     return Point{rect.left, rect.top};
 }
 
-Rect InsetRect(const Rect& rect, double inset)
+Rect InsetRect(const Rect& rect, const double inset)
 {
     AssertIsNonNegative(inset);
 
@@ -40,14 +40,14 @@ Rect InsetRect(const Rect& rect, double inset)
         std::max(0.0, rect.height - inset * 2.0)};
 }
 
-Rect TakeTop(const Rect& rect, double height)
+Rect TakeTop(const Rect& rect, const double height)
 {
     AssertIsNonNegative(height);
 
     return Rect{rect.left, rect.top, rect.width, std::min(height, rect.height)};
 }
 
-Rect DropTop(const Rect& rect, double height)
+Rect DropTop(const Rect& rect, const double height)
 {
     AssertIsNonNegative(height);
 

@@ -11,12 +11,12 @@ void AssertIsSuccess(const HPDF_STATUS status)
 	}
 }
 
-[[noreturn]] void HaruErrorHandler(const HPDF_STATUS errorNo, HPDF_STATUS detailNo, void* /*userData*/)
+[[noreturn]] void HaruErrorHandler(const HPDF_STATUS errorNo, const HPDF_STATUS detailNo, void* /*userData*/)
 {
 	throw std::runtime_error("Критическая ошибка PDF: код " + std::to_string(errorNo) + ", детали " + std::to_string(detailNo));
 }
 
-void AssertIsPdfValid(HPDF_Doc pdf)
+void AssertIsPdfValid(const HPDF_Doc pdf)
 {
 	if (!pdf)
 	{

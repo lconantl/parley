@@ -1,5 +1,7 @@
 #pragma once
-#include "pdf/pdf/Theme.hpp"
+
+#include "pdf/layout/TextBlock.hpp"
+#include "pdf/theme/Theme.hpp"
 
 TextStyle SlideTitleStyle(const Theme& theme);
 TextStyle CardTitleStyle(const Theme& theme);
