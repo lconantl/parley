@@ -509,7 +509,7 @@ Deck DueDiligenceDeckBuilder::Build(
 	deck.slides.push_back(BuildMargins(analytics, narrative));
 	deck.slides.push_back(BuildCashFlow(analytics, narrative));
 	deck.slides.push_back(BuildBalance(analytics, narrative));
-	deck.slides.push_back(BuildQuality(analytics, narrative));
+	// deck.slides.push_back(BuildQuality(analytics, narrative));
 	deck.slides.push_back(BuildReturns(analytics, narrative));
 	deck.slides.push_back(BuildMarket(analytics, narrative));
 	deck.slides.push_back(BuildCompetitors(analytics, narrative));

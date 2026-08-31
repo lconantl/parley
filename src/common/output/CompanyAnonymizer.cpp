@@ -5,7 +5,7 @@
 namespace
 {
 constexpr auto Subject = "Целевая компания";
-constexpr auto UnknownIndustry = "Отрасль не определена";
+constexpr auto UnknownIndustry = "Отрасль скрыта";
 constexpr auto UnknownRegion = "Регион не определен";
 
 constexpr double SmallScaleLimit = 800000000.0;

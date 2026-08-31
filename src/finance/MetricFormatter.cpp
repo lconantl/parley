@@ -76,7 +76,7 @@ std::string FormatCompactMoney(const double value)
 		return BuildFixed(value / Thousand, DefaultDecimals) + " тыс руб.";
 	}
 
-	return BuildFixed(value, DefaultDecimals) + " ₽";
+	return BuildFixed(value, DefaultDecimals) + " руб.";
 }
 
 std::string FormatByUnit(const double value, const MetricUnit unit, const bool compactMoney)
