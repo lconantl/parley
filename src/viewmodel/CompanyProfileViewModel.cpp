@@ -23,11 +23,21 @@ void AssertIsApiClientValid(const std::shared_ptr<DaDataApiClient>& apiClient)
 	}
 }
 
+bool IsAccessDenied(const DaDataResponse& response)
+{
+	return response.statusCode == 401 || response.statusCode == 403;
+}
+
 void AssertIsResponseSuccessful(const DaDataResponse& response)
 {
-	if (response.statusCode == 401 || response.statusCode == 403)
+	if (response.statusCode == 401)
 	{
-		throw std::runtime_error("Дадата отклонила ключи доступа");
+		throw std::runtime_error("Дадата отклонила ключ доступа");
+	}
+
+	if (response.statusCode == 403)
+	{
+		throw std::runtime_error("Метод недоступен на текущем тарифе Дадаты");
 	}
 
 	if (response.statusCode == 429)
@@ -195,9 +205,36 @@ BrandProfile CompanyProfileViewModel::TryLoadBrand(const std::string& identifier
 	return {};
 }
 
+bool CompanyProfileViewModel::ProbeAffiliatedAccess(const std::string& identifier) const
+{
+	if (!m_affiliatedAvailable.load())
+	{
+		return false;
+	}
+
+	const DaDataResponse response = m_apiClient->FindAffiliated(identifier, MaxAffiliatedPerKey);
+	if (!IsAccessDenied(response))
+	{
+		return true;
+	}
+
+	m_affiliatedAvailable.store(false);
+	std::cout << AffiliatedMethod
+			  << ": поиск аффилированных компаний доступен только на тарифе «Максимальный», "
+				 "раздел будет пустым"
+			  << std::endl;
+
+	return false;
+}
+
 std::vector<AffiliatedCompany> CompanyProfileViewModel::TryLoadAffiliatedCompanies(
 	const CompanyProfile& profile) const
 {
+	if (!ProbeAffiliatedAccess(profile.registry.inn))
+	{
+		return {};
+	}
+
 	const std::vector<std::string> keys = CollectAffiliationKeys(profile);
 
 	std::vector<std::future<std::vector<AffiliatedCompany>>> tasks;

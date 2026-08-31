@@ -9,6 +9,9 @@ namespace
 constexpr long RequestTimeoutSeconds = 240;
 constexpr auto WebSearchPluginId = "web";
 constexpr auto HealingPluginId = "response-healing";
+constexpr auto ModelsEndpoint = "/v1/models?type=chat";
+constexpr auto VersionSuffix = "/v1";
+constexpr std::size_t MaxSuggestedModels = 10;
 
 void AssertIsNotEmpty(const std::string& value, const std::string& message)
 {
@@ -16,6 +19,16 @@ void AssertIsNotEmpty(const std::string& value, const std::string& message)
 	{
 		throw std::invalid_argument(message);
 	}
+}
+
+bool EndsWith(const std::string& text, const std::string& suffix)
+{
+	if (text.size() < suffix.size())
+	{
+		return false;
+	}
+
+	return text.compare(text.size() - suffix.size(), suffix.size(), suffix) == 0;
 }
 
 nlohmann::json BuildMessages(const std::string& systemPrompt, const std::string& userPrompt)
@@ -62,6 +75,11 @@ public:
 		return m_model;
 	}
 
+	nlohmann::json Get(const std::string& path) const
+	{
+		return m_client.get(path);
+	}
+
 	double GetTotalCost() const
 	{
 		return m_totalCost.load();
@@ -75,7 +93,7 @@ private:
 
 		polza::Options options;
 		options.api_key = std::move(apiKey);
-		options.base_url = std::move(baseUrl);
+		options.base_url = NormalizeBaseUrl(std::move(baseUrl));
 		options.timeout_seconds = RequestTimeoutSeconds;
 
 		return options;
@@ -144,4 +162,76 @@ PolzaAnswer PolzaClient::AskStructured(
 double PolzaClient::GetTotalCost() const
 {
 	return m_impl->GetTotalCost();
+}
+
+std::string PolzaClient::NormalizeBaseUrl(std::string baseUrl)
+{
+	while (!baseUrl.empty() && baseUrl.back() == '/')
+	{
+		baseUrl.pop_back();
+	}
+
+	if (EndsWith(baseUrl, VersionSuffix))
+	{
+		baseUrl.erase(baseUrl.size() - std::string(VersionSuffix).size());
+	}
+
+	AssertIsNotEmpty(baseUrl, "Адрес нейросети не может быть пустым");
+
+	return baseUrl;
+}
+
+std::vector<std::string> PolzaClient::ListChatModels() const
+{
+	const nlohmann::json catalogue = m_impl->Get(ModelsEndpoint);
+
+	std::vector<std::string> models;
+	if (!catalogue.contains("data") || !catalogue.at("data").is_array())
+	{
+		return models;
+	}
+
+	for (const auto& node : catalogue.at("data"))
+	{
+		if (node.contains("id") && node.at("id").is_string())
+		{
+			models.push_back(node.at("id").get<std::string>());
+		}
+	}
+
+	return models;
+}
+
+void PolzaClient::AssertIsModelAvailable() const
+{
+	const std::vector<std::string> models = ListChatModels();
+	if (models.empty())
+	{
+		return;
+	}
+
+	const std::string& selected = m_impl->GetModel();
+	for (const auto& model : models)
+	{
+		if (model == selected)
+		{
+			return;
+		}
+	}
+
+	std::string message = "Модель " + selected + " недоступна. Доступны, например:";
+	std::size_t counter = 0;
+
+	for (const auto& model : models)
+	{
+		if (counter >= MaxSuggestedModels)
+		{
+			break;
+		}
+
+		message += " " + model;
+		++counter;
+	}
+
+	throw std::runtime_error(message);
 }

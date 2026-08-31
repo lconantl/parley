@@ -4,6 +4,7 @@
 #include "CommandRouter.hpp"
 #include "SessionRegistry.hpp"
 #include "common/config/Config.hpp"
+#include "common/pool/WorkerPool.hpp"
 #include "finance/MetricFormatter.hpp"
 #include "viewmodel/CompanyAnalyticsViewModel.hpp"
 
@@ -30,6 +31,7 @@ public:
 	ParleyBot& operator=(const ParleyBot&) = delete;
 
 	void Run() const;
+	void Stop() const;
 
 private:
 	void RegisterCommands(
@@ -41,9 +43,11 @@ private:
 
 	void HandleMessage(const std::shared_ptr<TgBot::Message>& rawMessage) const;
 	void HandleSession(const ParsedMessage& message) const;
+	void ScheduleSession(const ParsedMessage& message) const;
 
 	std::unique_ptr<TgBot::Bot> m_bot;
 	AccessPolicy m_accessPolicy;
 	CommandRouter m_router;
 	mutable SessionRegistry m_sessions;
+	mutable WorkerPool m_workers;
 };

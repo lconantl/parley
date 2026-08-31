@@ -1,8 +1,10 @@
 #include "ParleyBot.hpp"
+
 #include "MessageParser.hpp"
 #include "handlers/MarkdownReportCommandHandler.hpp"
 #include "handlers/StartCommandHandler.hpp"
 #include "handlers/StubCommandHandler.hpp"
+
 #include <iostream>
 #include <stdexcept>
 #include <tgbot/tgbot.h>
@@ -51,6 +53,7 @@ ParleyBot::ParleyBot(
 	std::filesystem::path outputDirectory)
 	: m_bot(CreateBot(config.GetBotToken()))
 	, m_accessPolicy(config.GetAllowedUsers())
+	, m_workers(WorkerPool::SuggestThreadCount())
 {
 	RegisterCommands(
 		std::move(analyticsViewModel),
@@ -100,12 +103,25 @@ void ParleyBot::HandleMessage(const std::shared_ptr<TgBot::Message>& rawMessage)
 			return;
 		}
 
-		HandleSession(message);
+		ScheduleSession(message);
 	}
 	catch (const std::exception& error)
 	{
 		LogError(error);
 	}
+}
+
+void ParleyBot::ScheduleSession(const ParsedMessage& message) const
+{
+	if (m_sessions.IsActive(message.userId))
+	{
+		MessageManager messages(&m_bot->getApi());
+		messages.SendText(message.chatId, BusyText);
+
+		return;
+	}
+
+	m_workers.Post([this, message] { HandleSession(message); });
 }
 
 void ParleyBot::HandleSession(const ParsedMessage& message) const
@@ -134,6 +150,11 @@ void ParleyBot::HandleSession(const ParsedMessage& message) const
 	messages.DeleteTrackedMessages();
 }
 
+void ParleyBot::Stop() const
+{
+	m_workers.Stop();
+}
+
 void ParleyBot::PublishCommandMenu() const
 {
 	std::vector<std::shared_ptr<TgBot::BotCommand>> menu;
@@ -149,7 +170,8 @@ void ParleyBot::PublishCommandMenu() const
 void ParleyBot::Run() const
 {
 	PublishCommandMenu();
-	std::cout << "Бот запущен: " << m_bot->getApi().getMe()->username << std::endl;
+	std::cout << "Бот запущен: " << m_bot->getApi().getMe()->username
+			  << ", рабочих потоков: " << m_workers.GetThreadCount() << std::endl;
 
 	TgBot::TgLongPoll longPoll(*m_bot);
 

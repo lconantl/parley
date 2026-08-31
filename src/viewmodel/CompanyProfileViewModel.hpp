@@ -3,6 +3,7 @@
 #include "api/DaDataApiClient.hpp"
 #include "model/Company.hpp"
 #include "model/CompanyProfile.hpp"
+#include <atomic>
 #include <memory>
 #include <string>
 #include <vector>
@@ -21,7 +22,9 @@ private:
 	std::vector<AffiliatedCompany> LoadAffiliated(const std::string& identifier) const;
 
 	BrandProfile TryLoadBrand(const std::string& identifier) const;
+	bool ProbeAffiliatedAccess(const std::string& identifier) const;
 	std::vector<AffiliatedCompany> TryLoadAffiliatedCompanies(const CompanyProfile& profile) const;
 
 	std::shared_ptr<DaDataApiClient> m_apiClient;
+	mutable std::atomic<bool> m_affiliatedAvailable{true};
 };

@@ -3,6 +3,7 @@
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <string>
+#include <vector>
 
 struct PolzaAnswer
 {
@@ -28,6 +29,11 @@ public:
 		const nlohmann::json& schema) const;
 
 	double GetTotalCost() const;
+
+	std::vector<std::string> ListChatModels() const;
+	void AssertIsModelAvailable() const;
+
+	static std::string NormalizeBaseUrl(std::string baseUrl);
 
 private:
 	class Impl;
