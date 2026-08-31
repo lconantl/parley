@@ -7,7 +7,8 @@
 #include "common/config/EnvLoader.hpp"
 #include "common/console/ConsoleEncoding.hpp"
 #include "common/output/DueDiligenceDeckBuilder.hpp"
-#include "common/output/pdf/theme/InvestmentReportTheme.hpp"
+// #include "common/output/pdf/theme/InvestmentReportTheme.hpp"
+#include "common/output/pdf/theme/StrategyPartnersTheme.hpp"
 #include "finance/MetricFormatter.hpp"
 #include "viewmodel/CompanyAnalyticsViewModel.hpp"
 
@@ -99,7 +100,7 @@ int main()
 		ParleyBot::Dependencies dependencies;
 		dependencies.analyticsViewModel = analyticsViewModel;
 		dependencies.narrator = narrator;
-		dependencies.theme = CreateInvestmentReportTheme(ResolveAssetsRoot());
+		dependencies.theme = CreateStrategyPartnersTheme(ResolveAssetsRoot());
 		dependencies.formatOptions = CreateFormatOptions();
 		dependencies.reportOptions = CreateReportOptions();
 		dependencies.outputDirectory = std::filesystem::temp_directory_path() / OutputFolder;

@@ -63,17 +63,17 @@ std::string FormatCompactMoney(const double value)
 
 	if (magnitude >= Billion)
 	{
-		return BuildFixed(value / Billion, DefaultDecimals) + " млрд ₽";
+		return BuildFixed(value / Billion, DefaultDecimals) + " млрд руб.";
 	}
 
 	if (magnitude >= Million)
 	{
-		return BuildFixed(value / Million, DefaultDecimals) + " млн ₽";
+		return BuildFixed(value / Million, DefaultDecimals) + " млн руб.";
 	}
 
 	if (magnitude >= Thousand)
 	{
-		return BuildFixed(value / Thousand, DefaultDecimals) + " тыс ₽";
+		return BuildFixed(value / Thousand, DefaultDecimals) + " тыс руб.";
 	}
 
 	return BuildFixed(value, DefaultDecimals) + " ₽";
