@@ -1,10 +1,9 @@
 #include "ParleyBot.hpp"
-
 #include "MessageParser.hpp"
 #include "handlers/MarkdownReportCommandHandler.hpp"
+#include "handlers/PresentationCommandHandler.hpp"
 #include "handlers/StartCommandHandler.hpp"
 #include "handlers/StubCommandHandler.hpp"
-
 #include <iostream>
 #include <stdexcept>
 #include <tgbot/tgbot.h>
@@ -46,39 +45,35 @@ std::shared_ptr<TgBot::BotCommand> MakeMenuItem(const CommandInfo& command)
 }
 } // namespace
 
-ParleyBot::ParleyBot(
-	const Config& config,
-	std::shared_ptr<CompanyAnalyticsViewModel> analyticsViewModel,
-	MetricFormatOptions formatOptions,
-	std::filesystem::path outputDirectory)
+ParleyBot::ParleyBot(const Config& config, Dependencies dependencies)
 	: m_bot(CreateBot(config.GetBotToken()))
 	, m_accessPolicy(config.GetAllowedUsers())
 	, m_workers(WorkerPool::SuggestThreadCount())
 {
-	RegisterCommands(
-		std::move(analyticsViewModel),
-		std::move(formatOptions),
-		std::move(outputDirectory));
-
+	RegisterCommands(std::move(dependencies));
 	SubscribeToMessages();
 }
 
 ParleyBot::~ParleyBot() = default;
 
-void ParleyBot::RegisterCommands(
-	std::shared_ptr<CompanyAnalyticsViewModel> analyticsViewModel,
-	MetricFormatOptions formatOptions,
-	std::filesystem::path outputDirectory)
+void ParleyBot::RegisterCommands(Dependencies dependencies)
 {
 	auto report = std::make_shared<MarkdownReportCommandHandler>(
-		std::move(analyticsViewModel),
-		std::move(outputDirectory),
-		std::move(formatOptions));
+		dependencies.analyticsViewModel,
+		dependencies.outputDirectory,
+		dependencies.formatOptions);
+
+	auto presentation = std::make_shared<PresentationCommandHandler>(
+		dependencies.analyticsViewModel,
+		dependencies.narrator,
+		dependencies.outputDirectory,
+		std::move(dependencies.theme),
+		std::move(dependencies.reportOptions),
+		dependencies.formatOptions);
 
 	m_router.Register(std::make_shared<StartCommandHandler>());
 	m_router.Register(report);
-	m_router.Register(std::make_shared<StubCommandHandler>(
-		"pres", "Получить презентацию по ИНН", DevelopmentText));
+	m_router.Register(presentation);
 	m_router.Register(std::make_shared<StubCommandHandler>(
 		"pay", "Оплатить анализ", DevelopmentText));
 

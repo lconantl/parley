@@ -5,13 +5,10 @@
 
 namespace
 {
-constexpr auto StatusText = "Собираю данные и считаю показатели, это займет до минуты";
-constexpr auto MissingIdentifierText
-	= "Пришлите ИНН организации: 10 цифр для юридического лица или 12 для предпринимателя";
-constexpr auto InvalidIdentifierText
-	= "Это не похоже на ИНН. Проверьте контрольную сумму и пришлите номер еще раз";
-constexpr auto NoDataText
-	= "Данных об этой организации нет ни в реестрах, ни в открытых источниках";
+constexpr auto StatusText = "Собираю данные и считаю показатели, это займет от 1 до 5 минут";
+constexpr auto MissingIdentifierText = "Пришлите ИНН организации: 10 цифр для юридического лица или 12 для предпринимателя";
+constexpr auto InvalidIdentifierText = "Это не похоже на ИНН. Проверьте контрольную сумму и пришлите номер еще раз";
+constexpr auto NoDataText = "Данных об этой организации нет ни в реестрах, ни в открытых источниках";
 
 void AssertIsViewModelValid(const std::shared_ptr<CompanyAnalyticsViewModel>& viewModel)
 {
@@ -84,5 +81,6 @@ void AnalyticsCommandHandler::Execute(const CommandContext& context)
 	}
 
 	const std::filesystem::path document = BuildDocument(analytics);
-	context.messages->SendDocument(context.message.chatId, document, BuildCaption(analytics));
+	context.messages->SendDocument(
+		context.message.chatId, document, BuildCaption(analytics), GetMimeType());
 }

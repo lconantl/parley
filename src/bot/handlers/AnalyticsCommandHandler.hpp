@@ -3,7 +3,6 @@
 #include "bot/ICommandHandler.hpp"
 #include "finance/CompanyAnalytics.hpp"
 #include "viewmodel/CompanyAnalyticsViewModel.hpp"
-
 #include <filesystem>
 #include <memory>
 #include <string>
@@ -20,6 +19,7 @@ public:
 protected:
 	virtual std::filesystem::path BuildDocument(const CompanyAnalytics& analytics) const = 0;
 	virtual std::string BuildCaption(const CompanyAnalytics& analytics) const = 0;
+	virtual std::string GetMimeType() const = 0;
 
 	const std::filesystem::path& GetOutputDirectory() const noexcept;
 

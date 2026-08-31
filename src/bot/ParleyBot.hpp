@@ -3,7 +3,10 @@
 #include "AccessPolicy.hpp"
 #include "CommandRouter.hpp"
 #include "SessionRegistry.hpp"
+#include "ai/DueDiligenceNarrator.hpp"
 #include "common/config/Config.hpp"
+#include "common/output/DueDiligenceDeckBuilder.hpp"
+#include "common/output/pdf/theme/Theme.hpp"
 #include "common/pool/WorkerPool.hpp"
 #include "finance/MetricFormatter.hpp"
 #include "viewmodel/CompanyAnalyticsViewModel.hpp"
@@ -20,11 +23,17 @@ class Message;
 class ParleyBot
 {
 public:
-	ParleyBot(
-		const Config& config,
-		std::shared_ptr<CompanyAnalyticsViewModel> analyticsViewModel,
-		MetricFormatOptions formatOptions,
-		std::filesystem::path outputDirectory);
+	struct Dependencies
+	{
+		std::shared_ptr<CompanyAnalyticsViewModel> analyticsViewModel;
+		std::shared_ptr<DueDiligenceNarrator> narrator;
+		Theme theme;
+		MetricFormatOptions formatOptions;
+		DueDiligenceOptions reportOptions;
+		std::filesystem::path outputDirectory;
+	};
+
+	ParleyBot(const Config& config, Dependencies dependencies);
 	~ParleyBot();
 
 	ParleyBot(const ParleyBot&) = delete;
@@ -34,10 +43,7 @@ public:
 	void Stop() const;
 
 private:
-	void RegisterCommands(
-		std::shared_ptr<CompanyAnalyticsViewModel> analyticsViewModel,
-		MetricFormatOptions formatOptions,
-		std::filesystem::path outputDirectory);
+	void RegisterCommands(Dependencies dependencies);
 	void SubscribeToMessages();
 	void PublishCommandMenu() const;
 

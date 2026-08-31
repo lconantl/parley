@@ -1,5 +1,4 @@
 #include "MarkdownReportCommandHandler.hpp"
-
 #include <fstream>
 #include <stdexcept>
 
@@ -8,6 +7,7 @@ namespace
 constexpr auto CommandName = "report";
 constexpr auto CommandDescription = "Получить отчет по ИНН";
 constexpr auto FileExtension = ".md";
+constexpr auto MimeType = "text/markdown";
 
 void AssertIsFileOpen(const std::ofstream& file, const std::filesystem::path& path)
 {
@@ -43,6 +43,11 @@ std::string MarkdownReportCommandHandler::GetName() const
 std::string MarkdownReportCommandHandler::GetDescription() const
 {
 	return CommandDescription;
+}
+
+std::string MarkdownReportCommandHandler::GetMimeType() const
+{
+	return MimeType;
 }
 
 std::filesystem::path MarkdownReportCommandHandler::BuildDocument(

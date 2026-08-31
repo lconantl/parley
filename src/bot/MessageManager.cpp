@@ -6,7 +6,6 @@
 namespace
 {
 constexpr std::size_t MaxMessageLength = 3900;
-constexpr auto DocumentMimeType = "text/markdown";
 
 void AssertIsApiAvailable(const TgBot::Api* api)
 {
@@ -96,11 +95,12 @@ void MessageManager::SendText(const std::int64_t chatId, const std::string& text
 void MessageManager::SendDocument(
 	const std::int64_t chatId,
 	const std::filesystem::path& path,
-	const std::string& caption) const
+	const std::string& caption,
+	const std::string& mimeType) const
 {
 	AssertIsFileAvailable(path);
 
-	const auto document = TgBot::InputFile::fromFile(path.string(), DocumentMimeType);
+	const auto document = TgBot::InputFile::fromFile(path.string(), mimeType);
 	m_api->sendDocument(chatId, document, "", caption);
 }
 

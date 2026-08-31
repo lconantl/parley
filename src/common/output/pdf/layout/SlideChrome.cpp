@@ -21,12 +21,9 @@ void AssertIsPositivePageNumber(const int pageNumber)
 	}
 }
 
-void AssertIsKnownAsset(const Theme& theme, const AssetRole role)
+bool HasAsset(const Theme& theme, const AssetRole role)
 {
-	if (!theme.assets.contains(role))
-	{
-		throw std::runtime_error("В теме отсутствует требуемый графический ресурс");
-	}
+	return theme.assets.contains(role) && !theme.assets.at(role).empty();
 }
 
 Rect LogoBounds(const Theme& theme)
@@ -83,7 +80,10 @@ void EmitBackground(DrawList& target, const Theme& theme, const Color& fill)
 
 void EmitDecoration(DrawList& target, const Theme& theme, const AssetRole role, const Rect& bounds)
 {
-	AssertIsKnownAsset(theme, role);
+	if (!HasAsset(theme, role))
+	{
+		return;
+	}
 
 	ImageCommand command;
 	command.bounds = bounds;

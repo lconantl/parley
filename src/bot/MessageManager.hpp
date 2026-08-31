@@ -27,7 +27,8 @@ public:
 	void SendDocument(
 		std::int64_t chatId,
 		const std::filesystem::path& path,
-		const std::string& caption) const;
+		const std::string& caption,
+		const std::string& mimeType) const;
 	void DeleteTrackedMessages();
 
 private:
