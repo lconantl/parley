@@ -1,7 +1,7 @@
 #include "DaDataApiClient.hpp"
 
-#include "CurlSession.hpp"
-#include "api/CurlGlobalScope.hpp"
+#include "http/CurlGlobalScope.hpp"
+#include "http/CurlSession.hpp"
 
 #include <stdexcept>
 #include <utility>

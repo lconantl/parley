@@ -1,6 +1,6 @@
 #pragma once
 
-#include "model/ DaDataApiTypes.hpp"
+#include "DaDataApiTypes.hpp"
 #include <memory>
 #include <string>
 

@@ -1,14 +1,13 @@
 #include "api/CheckoApiClient.hpp"
 #include "bot/ParleyBot.hpp"
+#include "common/console/ConsoleEncoding.hpp"
 #include "config/Config.hpp"
 #include "config/EnvLoader.hpp"
-#include "console/ConsoleEncoding.hpp"
 #include "pdf/render/PdfGenerator.hpp"
 #include "pdf/theme/StrategyPartnersTheme.hpp"
 #include "view/ConsoleCompanyStatisticsView.hpp"
 #include "viewmodel/CompanyProfileViewModel.hpp"
 #include "viewmodel/CompanyViewModel.hpp"
-
 #include <iostream>
 #include <tgbot/Bot.h>
 

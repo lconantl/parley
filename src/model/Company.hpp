@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CompanyAnalytics.hpp"
 #include "CompanyProfile.hpp"
 #include <mutex>
 #include <nlohmann/json.hpp>
@@ -20,6 +21,10 @@ public:
 	void SetProfile(CompanyProfile profile);
 	CompanyProfile GetProfile() const;
 
+	bool HasAnalytics() const;
+	void SetAnalytics(CompanyAnalytics analytics);
+	CompanyAnalytics GetAnalytics() const;
+
 	const std::string& GetIdentifier() const noexcept;
 	std::size_t GetMethodCount() const noexcept;
 	void PrintJson() const;
@@ -28,5 +33,6 @@ private:
 	std::string m_id;
 	std::unordered_map<std::string, nlohmann::json> m_data;
 	std::optional<CompanyProfile> m_profile;
+	std::optional<CompanyAnalytics> m_analytics;
 	mutable std::mutex m_mutex;
 };

@@ -31,6 +31,14 @@ void AssertIsProfileLoaded(const std::optional<CompanyProfile>& profile)
 		throw std::out_of_range("Профиль организации не загружен");
 	}
 }
+
+void AssertIsAnalyticsLoaded(const std::optional<CompanyAnalytics>& analytics)
+{
+	if (!analytics.has_value())
+	{
+		throw std::out_of_range("Аналитика по организации не рассчитана");
+	}
+}
 } // namespace
 
 void AssertIsNotEmpty(const std::string& id)
@@ -88,6 +96,25 @@ CompanyProfile Company::GetProfile() const
 	std::lock_guard lock(m_mutex);
 	AssertIsProfileLoaded(m_profile);
 	return m_profile.value();
+}
+
+bool Company::HasAnalytics() const
+{
+	std::lock_guard lock(m_mutex);
+	return m_analytics.has_value();
+}
+
+void Company::SetAnalytics(CompanyAnalytics analytics)
+{
+	std::lock_guard lock(m_mutex);
+	m_analytics = std::move(analytics);
+}
+
+CompanyAnalytics Company::GetAnalytics() const
+{
+	std::lock_guard lock(m_mutex);
+	AssertIsAnalyticsLoaded(m_analytics);
+	return m_analytics.value();
 }
 
 const std::string& Company::GetIdentifier() const noexcept
