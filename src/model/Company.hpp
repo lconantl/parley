@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CompanyAnalytics.hpp"
+#include "../finance/CompanyAnalytics.hpp"
 #include "CompanyProfile.hpp"
 #include <mutex>
 #include <nlohmann/json.hpp>

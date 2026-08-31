@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../finance/MetricValue.hpp"
+#include "MetricValue.hpp"
 
 #include <string>
 #include <vector>

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../finance/CompanyAnalytics.hpp"
 #include "ai/CompanyEstimator.hpp"
 #include "ai/PolzaClient.hpp"
 #include "api/CheckoApiClient.hpp"
@@ -7,7 +8,6 @@
 #include "finance/FinancialHistory.hpp"
 #include "finance/MetricIndex.hpp"
 #include "model/Company.hpp"
-#include "model/CompanyAnalytics.hpp"
 #include "viewmodel/CompanyProfileViewModel.hpp"
 
 #include <memory>

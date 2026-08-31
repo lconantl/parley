@@ -1,15 +1,20 @@
 #include "ParleyBot.hpp"
-#include <exception>
-#include <functional>
+#include "MessageParser.hpp"
+#include "handlers/MarkdownReportCommandHandler.hpp"
+#include "handlers/StartCommandHandler.hpp"
+#include "handlers/StubCommandHandler.hpp"
 #include <iostream>
 #include <stdexcept>
-#include <vector>
-
 #include <tgbot/tgbot.h>
+#include <utility>
 
 namespace
 {
-void AssertIsFilledToken(const std::string& token)
+constexpr auto BusyText = "Предыдущий запрос еще выполняется, дождитесь ответа";
+constexpr auto FailureText = "Не удалось выполнить запрос";
+constexpr auto DevelopmentText = "В разработке";
+
+void AssertIsTokenValid(const std::string& token)
 {
 	if (token.empty())
 	{
@@ -17,39 +22,11 @@ void AssertIsFilledToken(const std::string& token)
 	}
 }
 
-void AssertIsChatAvailable(const TgBot::Message& message)
-{
-	if (message.chat == nullptr)
-	{
-		throw std::runtime_error("Сообщение получено без информации о чате");
-	}
-}
-
 std::unique_ptr<TgBot::Bot> CreateBot(const std::string& token)
 {
-	AssertIsFilledToken(token);
+	AssertIsTokenValid(token);
+
 	return std::make_unique<TgBot::Bot>(token);
-}
-
-std::string BuildDescriptionText()
-{
-	return "Привет, я бот <b>Parley</b> для анализа компаний. "
-		   "Чтобы начать анализ - пришли ИНН компании и её название.\n"
-		   "\n"
-		   "Доступны следующие команды:\n"
-		   "/report [ИНН] - получить отчёт\n"
-		   "/pres [ИНН] - получить презентацию\n"
-		   "/pay - оплатить API для AI анализа";
-}
-
-std::string BuildStubText()
-{
-	return "В разработке 🛠️";
-}
-
-std::vector<std::string> BuildStubCommandNames()
-{
-	return {"report", "pres", "pay"};
 }
 
 void LogError(const std::exception& error)
@@ -57,11 +34,73 @@ void LogError(const std::exception& error)
 	std::cerr << "Ошибка бота: " << error.what() << std::endl;
 }
 
-void RunProtected(const std::function<void()>& action)
+std::shared_ptr<TgBot::BotCommand> MakeMenuItem(const CommandInfo& command)
+{
+	auto menuItem = std::make_shared<TgBot::BotCommand>();
+	menuItem->command = command.name;
+	menuItem->description = command.description;
+
+	return menuItem;
+}
+} // namespace
+
+ParleyBot::ParleyBot(
+	const Config& config,
+	std::shared_ptr<CompanyAnalyticsViewModel> analyticsViewModel,
+	MetricFormatOptions formatOptions,
+	std::filesystem::path outputDirectory)
+	: m_bot(CreateBot(config.GetBotToken()))
+	, m_accessPolicy(config.GetAllowedUsers())
+{
+	RegisterCommands(
+		std::move(analyticsViewModel),
+		std::move(formatOptions),
+		std::move(outputDirectory));
+
+	SubscribeToMessages();
+}
+
+ParleyBot::~ParleyBot() = default;
+
+void ParleyBot::RegisterCommands(
+	std::shared_ptr<CompanyAnalyticsViewModel> analyticsViewModel,
+	MetricFormatOptions formatOptions,
+	std::filesystem::path outputDirectory)
+{
+	auto report = std::make_shared<MarkdownReportCommandHandler>(
+		std::move(analyticsViewModel),
+		std::move(outputDirectory),
+		std::move(formatOptions));
+
+	m_router.Register(std::make_shared<StartCommandHandler>());
+	m_router.Register(report);
+	m_router.Register(std::make_shared<StubCommandHandler>(
+		"pres", "Получить презентацию по ИНН", DevelopmentText));
+	m_router.Register(std::make_shared<StubCommandHandler>(
+		"pay", "Оплатить анализ", DevelopmentText));
+
+	m_router.SetFallback(report);
+}
+
+void ParleyBot::SubscribeToMessages()
+{
+	m_bot->getEvents().onAnyMessage([this](TgBot::Message::Ptr message) {
+		HandleMessage(message);
+	});
+}
+
+void ParleyBot::HandleMessage(const std::shared_ptr<TgBot::Message>& rawMessage) const
 {
 	try
 	{
-		action();
+		const ParsedMessage message = MessageParser::Parse(rawMessage);
+
+		if (!m_accessPolicy.IsAllowed(message.userId))
+		{
+			return;
+		}
+
+		HandleSession(message);
 	}
 	catch (const std::exception& error)
 	{
@@ -69,95 +108,60 @@ void RunProtected(const std::function<void()>& action)
 	}
 }
 
-void SendHtmlText(const TgBot::Api& api, const TgBot::Message& message, const std::string& text)
+void ParleyBot::HandleSession(const ParsedMessage& message) const
 {
-	AssertIsChatAvailable(message);
-	api.sendMessage(message.chat->id, text, nullptr, nullptr, nullptr, "HTML");
-}
+	MessageManager messages(&m_bot->getApi());
 
-void RegisterStartCommand(TgBot::Bot& bot)
-{
-	bot.getEvents().onCommand("start", [&bot](TgBot::Message::Ptr message) {
-		RunProtected([&bot, message] {
-			SendHtmlText(bot.getApi(), *message, BuildDescriptionText());
-		});
-	});
-}
-
-void RegisterStubCommand(TgBot::Bot& bot, const std::string& commandName)
-{
-	bot.getEvents().onCommand(commandName, [&bot](TgBot::Message::Ptr message) {
-		RunProtected([&bot, message] {
-			SendHtmlText(bot.getApi(), *message, BuildStubText());
-		});
-	});
-}
-
-void RegisterStubCommands(TgBot::Bot& bot)
-{
-	for (const auto& commandName : BuildStubCommandNames())
+	const SessionLock lock(m_sessions, message.userId);
+	if (!lock.IsAcquired())
 	{
-		RegisterStubCommand(bot, commandName);
+		messages.SendText(message.chatId, BusyText);
+		return;
 	}
+
+	messages.TrackMessage(message.chatId, message.messageId);
+
+	try
+	{
+		m_router.Dispatch({message, &messages});
+	}
+	catch (const std::exception& error)
+	{
+		LogError(error);
+		messages.SendText(message.chatId, std::string(FailureText) + ": " + error.what());
+	}
+
+	messages.DeleteTrackedMessages();
 }
 
-void RegisterPlainTextStub(TgBot::Bot& bot)
+void ParleyBot::PublishCommandMenu() const
 {
-	bot.getEvents().onNonCommandMessage([&bot](TgBot::Message::Ptr message) {
-		RunProtected([&bot, message] {
-			SendHtmlText(bot.getApi(), *message, BuildStubText());
-		});
-	});
-}
+	std::vector<std::shared_ptr<TgBot::BotCommand>> menu;
 
-void RegisterHandlers(TgBot::Bot& bot)
-{
-	RegisterStartCommand(bot);
-	RegisterStubCommands(bot);
-	RegisterPlainTextStub(bot);
-}
+	for (const auto& command : m_router.ListCommands())
+	{
+		menu.push_back(MakeMenuItem(command));
+	}
 
-std::shared_ptr<TgBot::BotCommand> MakeMenuItem(const std::string& commandName,
-	const std::string& description)
-{
-	auto menuItem = std::make_shared<TgBot::BotCommand>();
-	menuItem->command = commandName;
-	menuItem->description = description;
-	return menuItem;
+	m_bot->getApi().setMyCommands(menu);
 }
-
-void PublishCommandMenu(const TgBot::Api& api)
-{
-	api.setMyCommands({
-		MakeMenuItem("start", "Описание бота"),
-		MakeMenuItem("report", "Получить отчёт по ИНН"),
-		MakeMenuItem("pres", "Получить презентацию по ИНН"),
-		MakeMenuItem("pay", "Оплатить API для AI анализа"),
-	});
-}
-
-void LogStartup(const TgBot::Api& api)
-{
-	std::cout << "Бот запущен: " << api.getMe()->username << std::endl;
-}
-} // namespace
-
-ParleyBot::ParleyBot(const std::string& token)
-	: m_bot(CreateBot(token))
-{
-	RegisterHandlers(*m_bot);
-}
-
-ParleyBot::~ParleyBot() = default;
 
 void ParleyBot::Run() const
 {
-	PublishCommandMenu(m_bot->getApi());
-	LogStartup(m_bot->getApi());
+	PublishCommandMenu();
+	std::cout << "Бот запущен: " << m_bot->getApi().getMe()->username << std::endl;
 
 	TgBot::TgLongPoll longPoll(*m_bot);
+
 	while (true)
 	{
-		RunProtected([&longPoll] { longPoll.start(); });
+		try
+		{
+			longPoll.start();
+		}
+		catch (const std::exception& error)
+		{
+			LogError(error);
+		}
 	}
 }

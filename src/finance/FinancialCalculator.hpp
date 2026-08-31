@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../model/CompanyAnalytics.hpp"
+#include "CompanyAnalytics.hpp"
 #include "FinancialHistory.hpp"
 #include "model/CompanyProfile.hpp"
 

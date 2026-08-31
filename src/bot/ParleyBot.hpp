@@ -1,8 +1,14 @@
 #pragma once
 
+#include "AccessPolicy.hpp"
+#include "CommandRouter.hpp"
+#include "SessionRegistry.hpp"
 #include "common/config/Config.hpp"
+#include "finance/MetricFormatter.hpp"
+#include "viewmodel/CompanyAnalyticsViewModel.hpp"
+
+#include <filesystem>
 #include <memory>
-#include <unordered_set>
 
 namespace TgBot
 {
@@ -13,15 +19,31 @@ class Message;
 class ParleyBot
 {
 public:
-	explicit ParleyBot(const Config& config);
+	ParleyBot(
+		const Config& config,
+		std::shared_ptr<CompanyAnalyticsViewModel> analyticsViewModel,
+		MetricFormatOptions formatOptions,
+		std::filesystem::path outputDirectory);
 	~ParleyBot();
+
+	ParleyBot(const ParleyBot&) = delete;
+	ParleyBot& operator=(const ParleyBot&) = delete;
 
 	void Run() const;
 
 private:
-	std::unique_ptr<TgBot::Bot> m_bot;
-	Config m_config;
-	std::unordered_set<int64_t> m_activeUsers;
+	void RegisterCommands(
+		std::shared_ptr<CompanyAnalyticsViewModel> analyticsViewModel,
+		MetricFormatOptions formatOptions,
+		std::filesystem::path outputDirectory);
+	void SubscribeToMessages();
+	void PublishCommandMenu() const;
 
-	void ProcessMessage(const std::shared_ptr<TgBot::Message>& message);
+	void HandleMessage(const std::shared_ptr<TgBot::Message>& rawMessage) const;
+	void HandleSession(const ParsedMessage& message) const;
+
+	std::unique_ptr<TgBot::Bot> m_bot;
+	AccessPolicy m_accessPolicy;
+	CommandRouter m_router;
+	mutable SessionRegistry m_sessions;
 };

@@ -1,18 +1,12 @@
 #pragma once
 
-#include <cstdint>
-#include <string>
-#include <tgbot/types/Message.h>
+#include "ParsedMessage.hpp"
+#include <memory>
 
-struct ParsedMessage
+namespace TgBot
 {
-	int64_t userId;
-	int64_t chatId;
-	int32_t messageId;
-	std::string text;
-	std::string command;
-	std::string arguments;
-};
+class Message;
+} // namespace TgBot
 
 class MessageParser
 {

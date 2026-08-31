@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../finance/CompanyAnalytics.hpp"
 #include "../finance/MetricIndex.hpp"
-#include "../model/CompanyAnalytics.hpp"
 #include "PolzaClient.hpp"
 
 #include <memory>

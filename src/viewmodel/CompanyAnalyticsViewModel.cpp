@@ -1,7 +1,7 @@
 #include "CompanyAnalyticsViewModel.hpp"
-#include "model/FinancialCalculator.hpp"
-#include "model/FinancialHistoryParser.hpp"
-#include "model/Metric.hpp"
+#include "finance/FinancialCalculator.hpp"
+#include "finance/FinancialHistoryParser.hpp"
+#include "finance/Metric.hpp"
 #include <algorithm>
 #include <ctime>
 #include <iostream>

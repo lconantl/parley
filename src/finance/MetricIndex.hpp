@@ -1,7 +1,7 @@
 #pragma once
 
+#include "CompanyAnalytics.hpp"
 #include "MetricValue.hpp"
-#include "model/CompanyAnalytics.hpp"
 #include <string>
 #include <vector>
 
