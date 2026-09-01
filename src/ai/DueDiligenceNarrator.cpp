@@ -37,7 +37,8 @@ std::string SystemPrompt()
 		   "Формулируй утверждения прямо.\n"
 		   "5. Если показателя не хватает для вывода, не додумывай его молча: вынеси вопрос в "
 		   "список того, что нужно проверить дополнительно.\n"
-		   "6. Каждое утверждение должно опираться на переданные цифры.";
+		   "6. Каждое утверждение должно опираться на переданные цифры."
+		   "7. Никогда не используй символ рубля (₽), всегда пиши текстовое сокращение «руб.».";
 }
 
 nlohmann::json StringArray(const char* description)
@@ -179,7 +180,8 @@ std::string BuildMetricBlock(const CompanyAnalytics& analytics)
 
 			if (!printedTitle)
 			{
-				stream << "\n" << MetricReport::DescribeGroup(group) << ":\n";
+				stream << "\n"
+					   << MetricReport::DescribeGroup(group) << ":\n";
 				printedTitle = true;
 			}
 

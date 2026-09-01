@@ -7,7 +7,6 @@
 #include "common/config/EnvLoader.hpp"
 #include "common/console/ConsoleEncoding.hpp"
 #include "common/output/DueDiligenceDeckBuilder.hpp"
-// #include "common/output/pdf/theme/InvestmentReportTheme.hpp"
 #include "common/output/pdf/theme/StrategyPartnersTheme.hpp"
 #include "finance/MetricFormatter.hpp"
 #include "viewmodel/CompanyAnalyticsViewModel.hpp"
@@ -54,7 +53,7 @@ MetricFormatOptions CreateFormatOptions()
 	options.showConfidence = false;
 	options.showMissing = false;
 	options.showNotApplicable = false;
-	options.compactMoney = true;
+	options.compactMoney = false;
 
 	return options;
 }
@@ -62,8 +61,8 @@ MetricFormatOptions CreateFormatOptions()
 DueDiligenceOptions CreateReportOptions()
 {
 	DueDiligenceOptions options;
-	options.anonymize = true;
-	options.showSourceNotes = true;
+	options.anonymize = false;
+	options.showSourceNotes = false;
 
 	return options;
 }
