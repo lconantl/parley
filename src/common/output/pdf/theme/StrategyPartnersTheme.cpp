@@ -108,9 +108,9 @@ std::map<FontRole, std::filesystem::path> CreateFontMap(const std::filesystem::p
 	const std::filesystem::path fontsRoot = root / "fonts";
 
 	return {
-		{FontRole::Regular, fontsRoot / "Verdana.ttf"},
-		{FontRole::Bold, fontsRoot / "Verdana-Bold.ttf"},
-		{FontRole::Light, fontsRoot / "Verdana.ttf"}};
+		{FontRole::Regular, fontsRoot / "Inter-Regular.ttf"},
+		{FontRole::Bold, fontsRoot / "Inter-Bold.ttf"},
+		{FontRole::Light, fontsRoot / "Inter-Light.ttf"}};
 }
 
 std::map<AssetRole, std::filesystem::path> CreateAssetMap(const std::filesystem::path& root)
