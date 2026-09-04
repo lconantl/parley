@@ -1,9 +1,9 @@
 #include "ParleyBot.hpp"
-#include "MessageParser.hpp"
-#include "handlers/MarkdownReportCommandHandler.hpp"
-#include "handlers/PresentationCommandHandler.hpp"
-#include "handlers/StartCommandHandler.hpp"
-#include "handlers/StubCommandHandler.hpp"
+
+#include "AccessPolicy.hpp"
+#include "documents/PresentationDocumentBuilder.hpp"
+#include "documents/ReportDocumentBuilder.hpp"
+
 #include <iostream>
 #include <stdexcept>
 #include <tgbot/tgbot.h>
@@ -11,10 +11,6 @@
 
 namespace
 {
-constexpr auto BusyText = "Предыдущий запрос еще выполняется, дождитесь ответа";
-constexpr auto FailureText = "Не удалось выполнить запрос";
-constexpr auto DevelopmentText = "В разработке";
-
 void AssertIsTokenValid(const std::string& token)
 {
 	if (token.empty())
@@ -35,114 +31,48 @@ void LogError(const std::exception& error)
 	std::cerr << "Ошибка бота: " << error.what() << std::endl;
 }
 
-std::shared_ptr<TgBot::BotCommand> MakeMenuItem(const CommandInfo& command)
+ConversationController::Dependencies BuildControllerDependencies(ParleyBot::Dependencies dependencies)
 {
-	auto menuItem = std::make_shared<TgBot::BotCommand>();
-	menuItem->command = command.name;
-	menuItem->description = command.description;
+	ConversationController::Dependencies controllerDependencies;
+	controllerDependencies.analyticsViewModel = dependencies.analyticsViewModel;
+	controllerDependencies.reportBuilder = std::make_shared<ReportDocumentBuilder>(
+		dependencies.outputDirectory,
+		dependencies.formatOptions);
+	controllerDependencies.presentationBuilder = std::make_shared<PresentationDocumentBuilder>(
+		std::move(dependencies.narrator),
+		dependencies.outputDirectory,
+		std::move(dependencies.theme),
+		dependencies.formatOptions);
+	controllerDependencies.showSourceNotes = dependencies.showSourceNotes;
+	controllerDependencies.author = dependencies.author;
 
-	return menuItem;
+	return controllerDependencies;
 }
 } // namespace
 
 ParleyBot::ParleyBot(const Config& config, Dependencies dependencies)
 	: m_bot(CreateBot(config.GetBotToken()))
-	, m_accessPolicy(config.GetAllowedUsers())
 	, m_workers(WorkerPool::SuggestThreadCount())
+	, m_controller(std::make_unique<ConversationController>(
+		  *m_bot,
+		  AccessPolicy(config.GetAllowedUsers()),
+		  BuildControllerDependencies(std::move(dependencies)),
+		  m_workers))
 {
-	RegisterCommands(std::move(dependencies));
 	SubscribeToMessages();
 }
 
 ParleyBot::~ParleyBot() = default;
 
-void ParleyBot::RegisterCommands(Dependencies dependencies)
-{
-	auto report = std::make_shared<MarkdownReportCommandHandler>(
-		dependencies.analyticsViewModel,
-		dependencies.outputDirectory,
-		dependencies.formatOptions);
-
-	auto presentation = std::make_shared<PresentationCommandHandler>(
-		dependencies.analyticsViewModel,
-		dependencies.narrator,
-		dependencies.outputDirectory,
-		std::move(dependencies.theme),
-		std::move(dependencies.reportOptions),
-		dependencies.formatOptions);
-
-	m_router.Register(std::make_shared<StartCommandHandler>());
-	m_router.Register(report);
-	m_router.Register(presentation);
-	m_router.Register(std::make_shared<StubCommandHandler>(
-		"pay", "Оплатить анализ", DevelopmentText));
-
-	m_router.SetFallback(report);
-}
-
 void ParleyBot::SubscribeToMessages()
 {
 	m_bot->getEvents().onAnyMessage([this](TgBot::Message::Ptr message) {
-		HandleMessage(message);
+		m_controller->HandleMessage(message);
 	});
-}
 
-void ParleyBot::HandleMessage(const std::shared_ptr<TgBot::Message>& rawMessage) const
-{
-	try
-	{
-		const ParsedMessage message = MessageParser::Parse(rawMessage);
-
-		if (!m_accessPolicy.IsAllowed(message.userId))
-		{
-			return;
-		}
-
-		ScheduleSession(message);
-	}
-	catch (const std::exception& error)
-	{
-		LogError(error);
-	}
-}
-
-void ParleyBot::ScheduleSession(const ParsedMessage& message) const
-{
-	if (m_sessions.IsActive(message.userId))
-	{
-		MessageManager messages(&m_bot->getApi());
-		messages.SendText(message.chatId, BusyText);
-
-		return;
-	}
-
-	m_workers.Post([this, message] { HandleSession(message); });
-}
-
-void ParleyBot::HandleSession(const ParsedMessage& message) const
-{
-	MessageManager messages(&m_bot->getApi());
-
-	const SessionLock lock(m_sessions, message.userId);
-	if (!lock.IsAcquired())
-	{
-		messages.SendText(message.chatId, BusyText);
-		return;
-	}
-
-	messages.TrackMessage(message.chatId, message.messageId);
-
-	try
-	{
-		m_router.Dispatch({message, &messages});
-	}
-	catch (const std::exception& error)
-	{
-		LogError(error);
-		messages.SendText(message.chatId, std::string(FailureText) + ": " + error.what());
-	}
-
-	messages.DeleteTrackedMessages();
+	m_bot->getEvents().onCallbackQuery([this](TgBot::CallbackQuery::Ptr query) {
+		m_controller->HandleCallbackQuery(query);
+	});
 }
 
 void ParleyBot::Stop() const
@@ -152,14 +82,11 @@ void ParleyBot::Stop() const
 
 void ParleyBot::PublishCommandMenu() const
 {
-	std::vector<std::shared_ptr<TgBot::BotCommand>> menu;
+	auto startCommand = std::make_shared<TgBot::BotCommand>();
+	startCommand->command = "start";
+	startCommand->description = "Начать";
 
-	for (const auto& command : m_router.ListCommands())
-	{
-		menu.push_back(MakeMenuItem(command));
-	}
-
-	m_bot->getApi().setMyCommands(menu);
+	m_bot->getApi().setMyCommands({startCommand});
 }
 
 void ParleyBot::Run() const

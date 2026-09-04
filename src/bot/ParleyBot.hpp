@@ -1,11 +1,8 @@
 #pragma once
 
-#include "AccessPolicy.hpp"
-#include "CommandRouter.hpp"
-#include "SessionRegistry.hpp"
+#include "ConversationController.hpp"
 #include "ai/DueDiligenceNarrator.hpp"
 #include "common/config/Config.hpp"
-#include "common/output/DueDiligenceDeckBuilder.hpp"
 #include "common/output/pdf/theme/Theme.hpp"
 #include "common/pool/WorkerPool.hpp"
 #include "finance/MetricFormatter.hpp"
@@ -17,7 +14,6 @@
 namespace TgBot
 {
 class Bot;
-class Message;
 } // namespace TgBot
 
 class ParleyBot
@@ -29,8 +25,9 @@ public:
 		std::shared_ptr<DueDiligenceNarrator> narrator;
 		Theme theme;
 		MetricFormatOptions formatOptions;
-		DueDiligenceOptions reportOptions;
 		std::filesystem::path outputDirectory;
+		bool showSourceNotes = false;
+		std::string author = "Investment Analysis";
 	};
 
 	ParleyBot(const Config& config, Dependencies dependencies);
@@ -43,17 +40,10 @@ public:
 	void Stop() const;
 
 private:
-	void RegisterCommands(Dependencies dependencies);
 	void SubscribeToMessages();
 	void PublishCommandMenu() const;
 
-	void HandleMessage(const std::shared_ptr<TgBot::Message>& rawMessage) const;
-	void HandleSession(const ParsedMessage& message) const;
-	void ScheduleSession(const ParsedMessage& message) const;
-
 	std::unique_ptr<TgBot::Bot> m_bot;
-	AccessPolicy m_accessPolicy;
-	CommandRouter m_router;
-	mutable SessionRegistry m_sessions;
 	mutable WorkerPool m_workers;
+	std::unique_ptr<ConversationController> m_controller;
 };

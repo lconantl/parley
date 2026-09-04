@@ -1,15 +1,28 @@
-#include "PresentationCommandHandler.hpp"
+#include "PresentationDocumentBuilder.hpp"
+
+#include "common/output/CompanyAnonymizer.hpp"
+#include "common/output/DueDiligenceDeckBuilder.hpp"
 #include "common/output/pdf/render/PdfGenerator.hpp"
+
 #include <iostream>
 #include <stdexcept>
 #include <utility>
 
 namespace
 {
-constexpr auto CommandName = "pres";
-constexpr auto CommandDescription = "Инвестиционный анализ в PDF";
+constexpr auto Label = "Презентация";
 constexpr auto FileExtension = ".pdf";
 constexpr auto MimeType = "application/pdf";
+
+void PrepareDirectory(const std::filesystem::path& directory)
+{
+	if (directory.empty() || std::filesystem::exists(directory))
+	{
+		return;
+	}
+
+	std::filesystem::create_directories(directory);
+}
 
 void AssertIsNarratorValid(const std::shared_ptr<DueDiligenceNarrator>& narrator)
 {
@@ -27,37 +40,26 @@ std::string BuildFileName(const CompanyAnalytics& analytics)
 }
 } // namespace
 
-PresentationCommandHandler::PresentationCommandHandler(
-	std::shared_ptr<CompanyAnalyticsViewModel> viewModel,
+PresentationDocumentBuilder::PresentationDocumentBuilder(
 	std::shared_ptr<DueDiligenceNarrator> narrator,
 	std::filesystem::path outputDirectory,
 	Theme theme,
-	DueDiligenceOptions reportOptions,
 	MetricFormatOptions formatOptions)
-	: AnalyticsCommandHandler(std::move(viewModel), std::move(outputDirectory))
-	, m_narrator(std::move(narrator))
+	: m_narrator(std::move(narrator))
+	, m_outputDirectory(std::move(outputDirectory))
 	, m_theme(std::move(theme))
-	, m_builder(std::move(reportOptions), std::move(formatOptions))
+	, m_formatOptions(formatOptions)
 {
 	AssertIsNarratorValid(m_narrator);
+	PrepareDirectory(m_outputDirectory);
 }
 
-std::string PresentationCommandHandler::GetName() const
+std::string PresentationDocumentBuilder::GetLabel() const
 {
-	return CommandName;
+	return Label;
 }
 
-std::string PresentationCommandHandler::GetDescription() const
-{
-	return CommandDescription;
-}
-
-std::string PresentationCommandHandler::GetMimeType() const
-{
-	return MimeType;
-}
-
-DueDiligenceNarrative PresentationCommandHandler::ComposeNarrative(
+DueDiligenceNarrative PresentationDocumentBuilder::ComposeNarrative(
 	const CompanyAnalytics& analytics) const
 {
 	const AnonymousIdentity identity = CompanyAnonymizer::Describe(analytics);
@@ -75,23 +77,23 @@ DueDiligenceNarrative PresentationCommandHandler::ComposeNarrative(
 	return DueDiligenceNarrator::BuildFallback(analytics);
 }
 
-std::filesystem::path PresentationCommandHandler::BuildDocument(
-	const CompanyAnalytics& analytics) const
+DocumentBuildResult PresentationDocumentBuilder::Build(
+	const CompanyAnalytics& analytics,
+	const DocumentBuildOptions& options) const
 {
-	const DueDiligenceNarrative narrative = ComposeNarrative(analytics);
-	const Deck deck = m_builder.Build(analytics, narrative);
-	const std::filesystem::path path = GetOutputDirectory() / BuildFileName(analytics);
+	const DueDiligenceOptions deckOptions{options.anonymize, options.showSourceNotes, options.author};
+	const DueDiligenceDeckBuilder builder(deckOptions, m_formatOptions);
 
+	const DueDiligenceNarrative narrative = ComposeNarrative(analytics);
+	const Deck deck = builder.Build(analytics, narrative);
+
+	const std::filesystem::path path = m_outputDirectory / BuildFileName(analytics);
 	PdfGenerator::Generate(deck, m_theme, path);
 
-	return path;
-}
-
-std::string PresentationCommandHandler::BuildCaption(const CompanyAnalytics& analytics) const
-{
 	const AnonymousIdentity identity = CompanyAnonymizer::Describe(analytics);
-
-	return "Инвестиционный анализ\n"
+	const std::string caption = "Инвестиционный анализ\n"
 		+ identity.industry + "\n"
 		+ identity.region + ", период " + identity.period;
+
+	return {path, caption, MimeType};
 }

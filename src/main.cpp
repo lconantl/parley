@@ -6,7 +6,6 @@
 #include "common/config/Config.hpp"
 #include "common/config/EnvLoader.hpp"
 #include "common/console/ConsoleEncoding.hpp"
-#include "common/output/DueDiligenceDeckBuilder.hpp"
 #include "common/output/pdf/theme/StrategyPartnersTheme.hpp"
 #include "finance/MetricFormatter.hpp"
 #include "viewmodel/CompanyAnalyticsViewModel.hpp"
@@ -57,15 +56,6 @@ MetricFormatOptions CreateFormatOptions()
 
 	return options;
 }
-
-DueDiligenceOptions CreateReportOptions()
-{
-	DueDiligenceOptions options;
-	options.anonymize = false;
-	options.showSourceNotes = false;
-
-	return options;
-}
 } // namespace
 
 int main()
@@ -101,8 +91,8 @@ int main()
 		dependencies.narrator = narrator;
 		dependencies.theme = CreateStrategyPartnersTheme(ResolveAssetsRoot());
 		dependencies.formatOptions = CreateFormatOptions();
-		dependencies.reportOptions = CreateReportOptions();
 		dependencies.outputDirectory = std::filesystem::temp_directory_path() / OutputFolder;
+		dependencies.showSourceNotes = false;
 
 		const ParleyBot bot(config, dependencies);
 		bot.Run();

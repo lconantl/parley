@@ -1,37 +1,39 @@
 #pragma once
 
 #include <cstdint>
-#include <filesystem>
 #include <string>
-#include <vector>
+#include <tgbot/tgbot.h>
 
-namespace TgBot
-{
-class Api;
-} // namespace TgBot
+class ConversationRegistry;
 
-struct MessageRef
-{
-	std::int64_t chatId = 0;
-	std::int32_t messageId = 0;
-};
-
+// Все методы, кроме DeleteTrackedMessages, отправляют/редактируют эфемерные сообщения:
+// они автоматически попадают в список на удаление конкретного пользователя в
+// ConversationRegistry. Готовые документы через этот класс не отправляются — см. ArtifactSender.
 class MessageManager
 {
 public:
-	explicit MessageManager(const TgBot::Api* api);
+	MessageManager(const TgBot::Api* api, ConversationRegistry& registry, std::int64_t userId);
 
 	void TrackMessage(std::int64_t chatId, std::int32_t messageId);
-	void SendStatus(std::int64_t chatId, const std::string& statusText);
-	void SendText(std::int64_t chatId, const std::string& text) const;
-	void SendDocument(
+	std::int32_t SendStatus(std::int64_t chatId, const std::string& statusText);
+	void SendText(std::int64_t chatId, const std::string& text);
+	std::int32_t SendWithKeyboard(
 		std::int64_t chatId,
-		const std::filesystem::path& path,
-		const std::string& caption,
-		const std::string& mimeType) const;
-	void DeleteTrackedMessages();
+		const std::string& text,
+		const TgBot::InlineKeyboardMarkup::Ptr& keyboard);
+	void EditText(
+		std::int64_t chatId,
+		std::int32_t messageId,
+		const std::string& text,
+		const TgBot::InlineKeyboardMarkup::Ptr& keyboard);
+	void EditKeyboard(
+		std::int64_t chatId,
+		std::int32_t messageId,
+		const TgBot::InlineKeyboardMarkup::Ptr& keyboard);
+	void DeleteTrackedMessages(std::int64_t chatId);
 
 private:
 	const TgBot::Api* m_api;
-	std::vector<MessageRef> m_trackedMessages;
+	ConversationRegistry& m_registry;
+	std::int64_t m_userId;
 };
