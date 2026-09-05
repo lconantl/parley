@@ -314,7 +314,7 @@ OnePagerNarrative OnePagerNarrator::Compose(
 	return narrative;
 }
 
-OnePagerNarrative OnePagerNarrator::BuildFallback(const CompanyAnalytics& analytics)
+OnePagerNarrative OnePagerNarrator::BuildFallback(const CompanyAnalytics& /*analytics*/)
 {
 	OnePagerNarrative narrative;
 
