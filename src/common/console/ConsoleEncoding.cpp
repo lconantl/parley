@@ -25,6 +25,21 @@ std::string SaveCurrentLocale()
 	const char* locale = std::setlocale(LC_ALL, nullptr);
 	return locale ? locale : "";
 }
+
+const char* ApplyFirstAvailableUtf8Locale()
+{
+	constexpr const char* candidates[] = {"C.UTF-8", "en_US.UTF-8", "C.utf8", ""};
+
+	for (const char* candidate : candidates)
+	{
+		if (const char* applied = std::setlocale(LC_ALL, candidate))
+		{
+			return applied;
+		}
+	}
+
+	return nullptr;
+}
 #endif
 } // namespace
 
@@ -53,7 +68,7 @@ ConsoleEncoding::~ConsoleEncoding() noexcept
 ConsoleEncoding::ConsoleEncoding()
 	: m_previousLocale(SaveCurrentLocale())
 {
-	AssertIsEncodingSet(std::setlocale(LC_ALL, ".UTF-8") != nullptr);
+	AssertIsEncodingSet(ApplyFirstAvailableUtf8Locale() != nullptr);
 }
 
 ConsoleEncoding::~ConsoleEncoding() noexcept
