@@ -40,6 +40,7 @@ Palette CreatePalette()
 	palette.accentSoft = ColorFromHex("D6DEE8");
 	palette.link = ColorFromHex("1F5FA8");
 	palette.violet = ColorFromHex("6E7C91");
+	palette.danger = ColorFromHex("C0392B");
 
 	return palette;
 }

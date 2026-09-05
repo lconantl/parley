@@ -1,4 +1,5 @@
 #include "ai/DueDiligenceNarrator.hpp"
+#include "ai/OnePagerNarrator.hpp"
 #include "ai/PolzaClient.hpp"
 #include "api/CheckoApiClient.hpp"
 #include "api/DaDataApiClient.hpp"
@@ -85,10 +86,12 @@ int main()
 			polzaClient);
 
 		const auto narrator = std::make_shared<DueDiligenceNarrator>(polzaClient);
+		const auto onePagerNarrator = std::make_shared<OnePagerNarrator>(polzaClient);
 
 		ParleyBot::Dependencies dependencies;
 		dependencies.analyticsViewModel = analyticsViewModel;
 		dependencies.narrator = narrator;
+		dependencies.onePagerNarrator = onePagerNarrator;
 		dependencies.theme = CreateStrategyPartnersTheme(ResolveAssetsRoot());
 		dependencies.formatOptions = CreateFormatOptions();
 		dependencies.outputDirectory = std::filesystem::temp_directory_path() / OutputFolder;

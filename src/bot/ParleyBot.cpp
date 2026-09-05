@@ -1,6 +1,7 @@
 #include "ParleyBot.hpp"
 
 #include "AccessPolicy.hpp"
+#include "documents/OnePagerDocumentBuilder.hpp"
 #include "documents/PresentationDocumentBuilder.hpp"
 #include "documents/ReportDocumentBuilder.hpp"
 
@@ -40,6 +41,11 @@ ConversationController::Dependencies BuildControllerDependencies(ParleyBot::Depe
 		dependencies.formatOptions);
 	controllerDependencies.presentationBuilder = std::make_shared<PresentationDocumentBuilder>(
 		std::move(dependencies.narrator),
+		dependencies.outputDirectory,
+		dependencies.theme,
+		dependencies.formatOptions);
+	controllerDependencies.onePagerBuilder = std::make_shared<OnePagerDocumentBuilder>(
+		std::move(dependencies.onePagerNarrator),
 		dependencies.outputDirectory,
 		std::move(dependencies.theme),
 		dependencies.formatOptions);

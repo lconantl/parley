@@ -4,7 +4,11 @@
 #include "common/output/pdf/graphics/DrawList.hpp"
 #include "common/output/pdf/model/Geometry.hpp"
 #include "common/output/pdf/theme/Theme.hpp"
+#include <string>
 #include <string_view>
+
+constexpr double SOURCE_NOTE_BOTTOM = 34.0;
+constexpr double SOURCE_NOTE_HEIGHT = 16.0;
 
 Rect SlideBounds(const Theme& theme);
 Rect ContentArea(const Theme& theme);
@@ -19,4 +23,17 @@ double EmitSlideTitle(
 	std::string_view title,
 	double maxWidth,
 	bool inverse,
+	const ITextMeasurer& measurer);
+
+void EmitSourceNote(
+	DrawList& target,
+	const std::string& note,
+	const Theme& theme,
+	const ITextMeasurer& measurer);
+
+void EmitTakeaway(
+	DrawList& target,
+	const std::string& takeaway,
+	const Theme& theme,
+	const Rect& area,
 	const ITextMeasurer& measurer);

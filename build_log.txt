@@ -1,0 +1,466 @@
+﻿[0/2] Re-checking globbed directories...
+[1/65] Generating CXX dyndep file CMakeFiles\onepager_fixture.dir\CXX.dd
+[2/64] Scanning D:\parley\src\ai\OnePagerNarrator.cpp for CXX dependencies
+Примечание: включение файла:  D:\parley\src\ai\OnePagerNarrator.hpp
+Примечание: включение файла:   D:\parley\src\ai\DueDiligenceNarrator.hpp
+Примечание: включение файла:    D:\parley\src\ai\PolzaClient.hpp
+Примечание: включение файла:     C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\memory
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\sal.h
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\concurrencysal.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vadefs.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xkeycheck.h
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\exception
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals.h
+Примечание: включение файла:        C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\crtdbg.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt.h
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime_new_debug.h
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime_new.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\crtdefs.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\use_ansi.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cstdlib
+Примечание: включение файла:        C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\math.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_math.h
+Примечание: включение файла:        C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_malloc.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_search.h
+Примечание: включение файла:          C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stddef.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wstdlib.h
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\limits.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\type_traits
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cstddef
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xtr1common
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cstdint
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\stdint.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cstring
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\string.h
+Примечание: включение файла:          C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_memory.h
+Примечание: включение файла:           C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_memcpy_s.h
+Примечание: включение файла:            C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\errno.h
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime_string.h
+Примечание: включение файла:          C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wstring.h
+Примечание: включение файла:       C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\malloc.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime_exception.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\eh.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_terminate.h
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\iosfwd
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cstdio
+Примечание: включение файла:        C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdio.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wstdio.h
+Примечание: включение файла:          C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_stdio_config.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cwchar
+Примечание: включение файла:        C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\wchar.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wconio.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wctype.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wdirect.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wio.h
+Примечание: включение файла:          C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_share.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wprocess.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wtime.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\sys/stat.h
+Примечание: включение файла:          C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\sys/types.h
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\intrin.h
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\intrin0.inl.h
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\setjmp.h
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\immintrin.h
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\wmmintrin.h
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\nmmintrin.h
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\smmintrin.h
+Примечание: включение файла:              C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\tmmintrin.h
+Примечание: включение файла:               C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\pmmintrin.h
+Примечание: включение файла:                C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\emmintrin.h
+Примечание: включение файла:                 C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xmmintrin.h
+Примечание: включение файла:                  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\mmintrin.h
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\zmmintrin.h
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\ammintrin.h
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\typeinfo
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime_typeinfo.h
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xmemory
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\limits
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cfloat
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\float.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\climits
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\intrin0.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\new
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xatomic.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xutility
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\utility
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\initializer_list
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\compare
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\concepts
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\tuple
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\atomic
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xatomic_wait.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xthreads.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_threads_core.hpp
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xtimec.h
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\ctime
+Примечание: включение файла:          C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\time.h
+Примечание: включение файла:     D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/json.hpp
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\algorithm
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_heap_algorithms.hpp
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_minmax.hpp
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\functional
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\unordered_map
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xhash
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cmath
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\list
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xpolymorphic_allocator.h
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vector
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_bit_utils.hpp
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_sanitizer_annotate_container.hpp
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xbit_ops.h
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xnode_handle.h
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\iterator
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xstring
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_string_view.hpp
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cctype
+Примечание: включение файла:        C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\ctype.h
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/adl_serializer.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/abi_macros.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/conversions/from_json.hpp
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\array
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\forward_list
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\map
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xtree
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\valarray
+Примечание: включение файла:        D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/exceptions.hpp
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\stdexcept
+Примечание: включение файла:         D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/value_t.hpp
+Примечание: включение файла:          D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/macro_scope.hpp
+Примечание: включение файла:           D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/detected.hpp
+Примечание: включение файла:            D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/void_t.hpp
+Примечание: включение файла:           D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/thirdparty/hedley/hedley.hpp
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\version
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cassert
+Примечание: включение файла:            C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\assert.h
+Примечание: включение файла:         D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/string_escape.hpp
+Примечание: включение файла:         D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/input/position_t.hpp
+Примечание: включение файла:         D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/cpp_future.hpp
+Примечание: включение файла:         D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/type_traits.hpp
+Примечание: включение файла:          D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/iterators/iterator_traits.hpp
+Примечание: включение файла:          D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/call_std/begin.hpp
+Примечание: включение файла:          D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/call_std/end.hpp
+Примечание: включение файла:          D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/json_fwd.hpp
+Примечание: включение файла:         D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/string_concat.hpp
+Примечание: включение файла:        D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/identity_tag.hpp
+Примечание: включение файла:        D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/std_fs.hpp
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\filesystem
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\chrono
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_chrono.hpp
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\ratio
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\system_error
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_system_error_abi.hpp
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cerrno
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xcall_once.h
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xerrc.h
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xfilesystem_abi.h
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_tzdb.hpp
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\format
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_format_ucd_tables.hpp
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_formatter.hpp
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_print.hpp
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_ranges_tuple_formatter.hpp
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\bit
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocale
+Примечание: включение файла:              C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xfacet
+Примечание: включение файла:              C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocinfo
+Примечание: включение файла:               C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_xlocinfo_types.hpp
+Примечание: включение файла:               C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\clocale
+Примечание: включение файла:                C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\locale.h
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\charconv
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xcharconv.h
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xcharconv_ryu.h
+Примечание: включение файла:              C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xcharconv_ryu_tables.h
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xcharconv_tables.h
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\locale
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocbuf
+Примечание: включение файла:              C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\streambuf
+Примечание: включение файла:               C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xiosbase
+Примечание: включение файла:                C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\share.h
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocmes
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocmon
+Примечание: включение файла:              C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocnum
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xloctime
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\iomanip
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\istream
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_ostream.hpp
+Примечание: включение файла:              C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\ios
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\optional
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xsmf_control.h
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\sstream
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/conversions/to_json.hpp
+Примечание: включение файла:        D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/iterators/iteration_proxy.hpp
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\ranges
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_int128.hpp
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_ranges_to.hpp
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\span
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string_view
+Примечание: включение файла:         D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/string_utils.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/byte_container_with_subtype.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/hash.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/input/binary_reader.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/input/input_adapters.hpp
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\numeric
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/input/json_sax.hpp
+Примечание: включение файла:        D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/input/lexer.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/is_sax.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/input/parser.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/iterators/internal_iterator.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/iterators/primitive_iterator.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/iterators/iter_impl.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/iterators/json_reverse_iterator.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/json_custom_base_class.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/json_pointer.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/json_ref.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/output/binary_writer.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/output/output_adapters.hpp
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\ostream
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/output/serializer.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/conversions/to_chars.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/ordered_map.hpp
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\any
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/macro_unscope.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/thirdparty/hedley/hedley_undef.hpp
+Примечание: включение файла:    D:\parley\src\common/output/CompanyAnonymizer.hpp
+Примечание: включение файла:     D:\parley\src\finance/CompanyAnalytics.hpp
+Примечание: включение файла:      D:\parley\src\finance\MetricValue.hpp
+Примечание: включение файла:  D:\parley\src\finance/Metric.hpp
+Примечание: включение файла:  D:\parley\src\finance/MetricFormatter.hpp
+[3/64] Generating CXX dyndep file CMakeFiles\core.dir\CXX.dd
+[4/7] Building CXX object CMakeFiles\core.dir\src\ai\OnePagerNarrator.cpp.obj
+Примечание: включение файла:  D:\parley\src\ai\OnePagerNarrator.hpp
+Примечание: включение файла:   D:\parley\src\ai\DueDiligenceNarrator.hpp
+Примечание: включение файла:    D:\parley\src\ai\PolzaClient.hpp
+Примечание: включение файла:     C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\memory
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\sal.h
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\concurrencysal.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vadefs.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xkeycheck.h
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\exception
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals.h
+Примечание: включение файла:        C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\crtdbg.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt.h
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime_new_debug.h
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime_new.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\crtdefs.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\use_ansi.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cstdlib
+Примечание: включение файла:        C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\math.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_math.h
+Примечание: включение файла:        C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_malloc.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_search.h
+Примечание: включение файла:          C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stddef.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wstdlib.h
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\limits.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\type_traits
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cstddef
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xtr1common
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cstdint
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\stdint.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cstring
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\string.h
+Примечание: включение файла:          C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_memory.h
+Примечание: включение файла:           C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_memcpy_s.h
+Примечание: включение файла:            C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\errno.h
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime_string.h
+Примечание: включение файла:          C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wstring.h
+Примечание: включение файла:       C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\malloc.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime_exception.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\eh.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_terminate.h
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\iosfwd
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cstdio
+Примечание: включение файла:        C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdio.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wstdio.h
+Примечание: включение файла:          C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_stdio_config.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cwchar
+Примечание: включение файла:        C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\wchar.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wconio.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wctype.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wdirect.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wio.h
+Примечание: включение файла:          C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_share.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wprocess.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wtime.h
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\sys/stat.h
+Примечание: включение файла:          C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\sys/types.h
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\intrin.h
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\intrin0.inl.h
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\setjmp.h
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\immintrin.h
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\wmmintrin.h
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\nmmintrin.h
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\smmintrin.h
+Примечание: включение файла:              C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\tmmintrin.h
+Примечание: включение файла:               C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\pmmintrin.h
+Примечание: включение файла:                C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\emmintrin.h
+Примечание: включение файла:                 C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xmmintrin.h
+Примечание: включение файла:                  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\mmintrin.h
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\zmmintrin.h
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\ammintrin.h
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\typeinfo
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime_typeinfo.h
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xmemory
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\limits
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cfloat
+Примечание: включение файла:         C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\float.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\climits
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\intrin0.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\new
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xatomic.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xutility
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\utility
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\initializer_list
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\compare
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\concepts
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\tuple
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\atomic
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xatomic_wait.h
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xthreads.h
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_threads_core.hpp
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xtimec.h
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\ctime
+Примечание: включение файла:          C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\time.h
+Примечание: включение файла:     D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/json.hpp
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\algorithm
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_heap_algorithms.hpp
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_minmax.hpp
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\functional
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\unordered_map
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xhash
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cmath
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\list
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xpolymorphic_allocator.h
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vector
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_bit_utils.hpp
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_sanitizer_annotate_container.hpp
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xbit_ops.h
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xnode_handle.h
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\iterator
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xstring
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_string_view.hpp
+Примечание: включение файла:       C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cctype
+Примечание: включение файла:        C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\ctype.h
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/adl_serializer.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/abi_macros.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/conversions/from_json.hpp
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\array
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\forward_list
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\map
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xtree
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\valarray
+Примечание: включение файла:        D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/exceptions.hpp
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\stdexcept
+Примечание: включение файла:         D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/value_t.hpp
+Примечание: включение файла:          D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/macro_scope.hpp
+Примечание: включение файла:           D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/detected.hpp
+Примечание: включение файла:            D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/void_t.hpp
+Примечание: включение файла:           D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/thirdparty/hedley/hedley.hpp
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\version
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cassert
+Примечание: включение файла:            C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\assert.h
+Примечание: включение файла:         D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/string_escape.hpp
+Примечание: включение файла:         D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/input/position_t.hpp
+Примечание: включение файла:         D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/cpp_future.hpp
+Примечание: включение файла:         D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/type_traits.hpp
+Примечание: включение файла:          D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/iterators/iterator_traits.hpp
+Примечание: включение файла:          D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/call_std/begin.hpp
+Примечание: включение файла:          D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/call_std/end.hpp
+Примечание: включение файла:          D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/json_fwd.hpp
+Примечание: включение файла:         D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/string_concat.hpp
+Примечание: включение файла:        D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/identity_tag.hpp
+Примечание: включение файла:        D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/std_fs.hpp
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\filesystem
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\chrono
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_chrono.hpp
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\ratio
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\system_error
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_system_error_abi.hpp
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\cerrno
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xcall_once.h
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xerrc.h
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xfilesystem_abi.h
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_tzdb.hpp
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\format
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_format_ucd_tables.hpp
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_formatter.hpp
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_print.hpp
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_ranges_tuple_formatter.hpp
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\bit
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocale
+Примечание: включение файла:              C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xfacet
+Примечание: включение файла:              C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocinfo
+Примечание: включение файла:               C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_xlocinfo_types.hpp
+Примечание: включение файла:               C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\clocale
+Примечание: включение файла:                C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\locale.h
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\charconv
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xcharconv.h
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xcharconv_ryu.h
+Примечание: включение файла:              C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xcharconv_ryu_tables.h
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xcharconv_tables.h
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\locale
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocbuf
+Примечание: включение файла:              C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\streambuf
+Примечание: включение файла:               C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xiosbase
+Примечание: включение файла:                C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\share.h
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocmes
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocmon
+Примечание: включение файла:              C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocnum
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xloctime
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\iomanip
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\istream
+Примечание: включение файла:             C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_ostream.hpp
+Примечание: включение файла:              C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\ios
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\optional
+Примечание: включение файла:            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xsmf_control.h
+Примечание: включение файла:           C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\sstream
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/conversions/to_json.hpp
+Примечание: включение файла:        D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/iterators/iteration_proxy.hpp
+Примечание: включение файла:         C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\ranges
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_int128.hpp
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_ranges_to.hpp
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\span
+Примечание: включение файла:          C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string_view
+Примечание: включение файла:         D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/string_utils.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/byte_container_with_subtype.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/hash.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/input/binary_reader.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/input/input_adapters.hpp
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\numeric
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/input/json_sax.hpp
+Примечание: включение файла:        D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/input/lexer.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/meta/is_sax.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/input/parser.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/iterators/internal_iterator.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/iterators/primitive_iterator.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/iterators/iter_impl.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/iterators/json_reverse_iterator.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/json_custom_base_class.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/json_pointer.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/json_ref.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/output/binary_writer.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/output/output_adapters.hpp
+Примечание: включение файла:        C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\ostream
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/output/serializer.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/conversions/to_chars.hpp
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/ordered_map.hpp
+Примечание: включение файла:      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\any
+Примечание: включение файла:      D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/detail/macro_unscope.hpp
+Примечание: включение файла:       D:\parley\cmake-build-debug\vcpkg_installed\x64-windows\include\nlohmann/thirdparty/hedley/hedley_undef.hpp
+Примечание: включение файла:    D:\parley\src\common/output/CompanyAnonymizer.hpp
+Примечание: включение файла:     D:\parley\src\finance/CompanyAnalytics.hpp
+Примечание: включение файла:      D:\parley\src\finance\MetricValue.hpp
+Примечание: включение файла:  D:\parley\src\finance/Metric.hpp
+Примечание: включение файла:  D:\parley\src\finance/MetricFormatter.hpp
+D:\parley\src\ai\OnePagerNarrator.cpp(317): warning C4100: "analytics": неиспользованный параметр
+[5/7] Linking CXX static library core.lib
+[6/7] Linking CXX executable onepager_fixture.exe

@@ -25,6 +25,7 @@ public:
 		std::shared_ptr<CompanyAnalyticsViewModel> analyticsViewModel;
 		std::shared_ptr<IDocumentBuilder> reportBuilder;
 		std::shared_ptr<IDocumentBuilder> presentationBuilder;
+		std::shared_ptr<IDocumentBuilder> onePagerBuilder;
 		bool showSourceNotes = false;
 		std::string author = "Investment Analysis";
 	};

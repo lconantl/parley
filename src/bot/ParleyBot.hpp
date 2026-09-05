@@ -2,6 +2,7 @@
 
 #include "ConversationController.hpp"
 #include "ai/DueDiligenceNarrator.hpp"
+#include "ai/OnePagerNarrator.hpp"
 #include "common/config/Config.hpp"
 #include "common/output/pdf/theme/Theme.hpp"
 #include "common/pool/WorkerPool.hpp"
@@ -23,6 +24,7 @@ public:
 	{
 		std::shared_ptr<CompanyAnalyticsViewModel> analyticsViewModel;
 		std::shared_ptr<DueDiligenceNarrator> narrator;
+		std::shared_ptr<OnePagerNarrator> onePagerNarrator;
 		Theme theme;
 		MetricFormatOptions formatOptions;
 		std::filesystem::path outputDirectory;

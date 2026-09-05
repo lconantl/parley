@@ -23,6 +23,7 @@ Palette CreatePalette()
 	palette.accentSoft = ColorFromHex("9AF7FF");
 	palette.link = ColorFromHex("2386E9");
 	palette.violet = ColorFromHex("8E93FE");
+	palette.danger = ColorFromHex("E5484D");
 
 	return palette;
 }

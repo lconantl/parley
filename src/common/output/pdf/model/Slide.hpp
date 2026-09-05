@@ -43,6 +43,7 @@ struct KpiEntry
 	std::string label;
 	std::string value;
 	std::string note;
+	bool emphasizeNegative = false;
 };
 
 struct KpiSlideContent
@@ -66,6 +67,13 @@ enum class ChartKind
 	Line
 };
 
+struct SecondaryAxisSeries
+{
+	std::string name;
+	std::vector<double> values;
+	std::string valueSuffix;
+};
+
 struct ChartSlideContent
 {
 	std::string title;
@@ -73,6 +81,7 @@ struct ChartSlideContent
 	std::vector<std::string> categories;
 	std::vector<ChartSeries> series;
 	std::string valueSuffix;
+	std::optional<SecondaryAxisSeries> secondarySeries;
 	std::string takeaway;
 	std::vector<std::string> notes;
 	std::string sourceNote;
@@ -93,6 +102,47 @@ struct ClosingSlideContent
 	std::vector<std::string> lines;
 };
 
+struct ValuationBridgeStep
+{
+	std::string label;
+	std::string value;
+	std::string annotation;
+	bool isTotal = false;
+};
+
+struct RevenueMixSegment
+{
+	std::string name;
+	std::string share;
+	std::string amount;
+	double shareFraction = 0.0;
+};
+
+struct OnePagerSlideContent
+{
+	std::string eyebrow;
+	std::string vintageLabel;
+	std::string headline;
+	std::string subtitle;
+
+	std::vector<KpiEntry> kpis;
+
+	std::vector<ValuationBridgeStep> valuationBridge;
+	std::string valuationMultipleNote;
+
+	std::vector<RevenueMixSegment> revenueMix;
+	std::vector<NumberedEntry> businessFacts;
+
+	std::optional<ChartSlideContent> trajectory;
+
+	std::vector<NumberedEntry> investmentCase;
+	std::vector<std::string> valueCreationSteps;
+	std::vector<NumberedEntry> risks;
+	std::string nextStep;
+
+	std::string sourceNote;
+};
+
 using SlideContent = std::variant<
 	TitleSlideContent,
 	CardGridSlideContent,
@@ -101,7 +151,8 @@ using SlideContent = std::variant<
 	KpiSlideContent,
 	ChartSlideContent,
 	TableSlideContent,
-	ClosingSlideContent>;
+	ClosingSlideContent,
+	OnePagerSlideContent>;
 
 struct Slide
 {

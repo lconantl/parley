@@ -1,4 +1,5 @@
 #include "SlideLayoutEngine.hpp"
+#include "OnePagerLayout.hpp"
 #include "SlideChrome.hpp"
 #include "common/output/pdf/graphics/ChartPainter.hpp"
 #include "common/output/pdf/model/Slide.hpp"
@@ -24,8 +25,6 @@ constexpr int DEFAULT_COLUMN_COUNT = 3;
 constexpr double KPI_VALUE_TO_LABEL_GAP = 10.0;
 constexpr double KPI_ROW_GAP = 26.0;
 constexpr double COMMENTARY_TOP_GAP = 30.0;
-constexpr double SOURCE_NOTE_HEIGHT = 16.0;
-constexpr double SOURCE_NOTE_BOTTOM = 34.0;
 constexpr double TAKEAWAY_HEIGHT = 54.0;
 constexpr double TAKEAWAY_GAP = 18.0;
 constexpr double CHART_NOTES_WIDTH = 210.0;
@@ -512,55 +511,6 @@ double KpiRowHeight(const Theme& theme)
 		+ BodyStyle(theme).lineHeight;
 }
 
-void EmitSourceNote(
-	DrawList& target,
-	const std::string& note,
-	const Theme& theme,
-	const ITextMeasurer& measurer)
-{
-	if (note.empty())
-	{
-		return;
-	}
-
-	TextStyle style = LabelStyle(theme);
-
-	const Rect area = Rect{
-		theme.metrics.page.marginLeft,
-		theme.metrics.page.height - SOURCE_NOTE_BOTTOM,
-		ContentWidth(theme.metrics),
-		SOURCE_NOTE_HEIGHT};
-
-	EmitSingleLine(target, note, style, area, measurer);
-}
-
-void EmitTakeaway(
-	DrawList& target,
-	const std::string& takeaway,
-	const Theme& theme,
-	const Rect& area,
-	const ITextMeasurer& measurer)
-{
-	if (takeaway.empty())
-	{
-		return;
-	}
-
-	RectCommand panel;
-	panel.bounds = area;
-	panel.fill = theme.palette.ink;
-	panel.cornerRadius = theme.metrics.card.cornerRadius;
-
-	target.AddRect(panel);
-
-	TextStyle style = BodyInverseStyle(theme);
-	style.align = TextAlign::Left;
-
-	const Rect textArea = InsetRect(area, theme.metrics.card.padding);
-
-	EmitTextBlock(target, takeaway, style, textArea, measurer);
-}
-
 void EmitKpiFigures(
 	DrawList& target,
 	const std::vector<KpiEntry>& figures,
@@ -904,6 +854,10 @@ DrawList SlideLayoutEngine::BuildSlide(const Slide& slide, int pageNumber) const
 			},
 			[&](const ClosingSlideContent& content) {
 				return BuildClosingSlide(content, m_theme, m_measurer);
+			},
+			[&](const OnePagerSlideContent& content) {
+				const OnePagerLayout layout(m_theme, m_measurer);
+				return layout.Paint(content, pageNumber);
 			}},
 		slide.content);
 }

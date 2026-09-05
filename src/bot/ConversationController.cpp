@@ -26,12 +26,10 @@ constexpr auto WelcomeText =
 constexpr auto AnonymityQuestionText = "Готовить анонимную версию (без названия и ИНН) или обычную?";
 constexpr auto InnPromptText = "Пришлите ИНН организации: 10 цифр для юридического лица или 12 для предпринимателя";
 constexpr auto InvalidIdentifierText = "Это не похоже на ИНН. Проверьте контрольную сумму и пришлите номер еще раз";
-constexpr auto LandingStubText = "Одностраничник пока в разработке, скоро добавим";
 constexpr auto StatusText = "Собираю данные и считаю показатели, это займет от 1 до 5 минут";
 constexpr auto BusyText = "Предыдущий запрос еще выполняется, дождитесь ответа";
 constexpr auto NoDataText = "Данных об этой организации нет ни в реестрах, ни в открытых источниках";
 constexpr auto FailureText = "Не удалось выполнить запрос";
-constexpr auto MoreComingText = "\n\nГотовится ещё один материал...";
 
 struct DocumentJob
 {
@@ -42,6 +40,42 @@ struct DocumentJob
 void LogError(const std::exception& error)
 {
 	std::cerr << "Ошибка бота: " << error.what() << std::endl;
+}
+
+std::string PluralizeMaterials(const int count)
+{
+	const int lastTwoDigits = count % 100;
+	const int lastDigit = count % 10;
+
+	if (lastTwoDigits >= 11 && lastTwoDigits <= 14)
+	{
+		return "материалов";
+	}
+
+	if (lastDigit == 1)
+	{
+		return "материал";
+	}
+
+	if (lastDigit >= 2 && lastDigit <= 4)
+	{
+		return "материала";
+	}
+
+	return "материалов";
+}
+
+std::string DescribeMoreComing(const int othersPending)
+{
+	if (othersPending <= 0)
+	{
+		return {};
+	}
+
+	const std::string verb = othersPending == 1 ? "Готовится" : "Готовятся";
+
+	return "\n\n" + verb + " ещё " + std::to_string(othersPending) + " "
+		+ PluralizeMaterials(othersPending) + "...";
 }
 } // namespace
 
@@ -203,13 +237,6 @@ void ConversationController::OnDocumentTypeChosen(
 	MessageManager messages(&m_bot.getApi(), m_conversations, userId);
 	m_conversations.SetSelection(userId, chatId, choice);
 
-	if (choice == DocumentSelection::OnePager)
-	{
-		messages.EditText(chatId, promptMessageId, LandingStubText, KeyboardFactory::Empty());
-		m_conversations.ResetToIdle(userId, chatId);
-		return;
-	}
-
 	if (choice == DocumentSelection::Report)
 	{
 		messages.EditText(chatId, promptMessageId, InnPromptText, KeyboardFactory::Empty());
@@ -306,6 +333,11 @@ void ConversationController::RunAnalysisJob(
 	presentationOptions.showSourceNotes = m_dependencies.showSourceNotes;
 	presentationOptions.author = m_dependencies.author;
 
+	DocumentBuildOptions onePagerOptions;
+	onePagerOptions.anonymize = session.anonymize;
+	onePagerOptions.showSourceNotes = m_dependencies.showSourceNotes;
+	onePagerOptions.author = m_dependencies.author;
+
 	std::vector<DocumentJob> jobs;
 	if (session.selection == DocumentSelection::Report || session.selection == DocumentSelection::All)
 	{
@@ -314,6 +346,10 @@ void ConversationController::RunAnalysisJob(
 	if (session.selection == DocumentSelection::Presentation || session.selection == DocumentSelection::All)
 	{
 		jobs.push_back({m_dependencies.presentationBuilder, presentationOptions});
+	}
+	if (session.selection == DocumentSelection::OnePager || session.selection == DocumentSelection::All)
+	{
+		jobs.push_back({m_dependencies.onePagerBuilder, onePagerOptions});
 	}
 
 	if (jobs.empty())
@@ -349,10 +385,7 @@ void ConversationController::RunAnalysisJob(
 			return;
 		}
 
-		if (othersPending > 0)
-		{
-			result.caption += MoreComingText;
-		}
+		result.caption += DescribeMoreComing(othersPending);
 
 		if (!trailWiped.exchange(true))
 		{

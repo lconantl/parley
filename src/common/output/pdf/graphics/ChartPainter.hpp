@@ -21,15 +21,34 @@ private:
 		double maximum = 0.0;
 	};
 
+	ValueRange MeasureRangeOf(const std::vector<std::vector<double>>& valueSets) const;
 	ValueRange MeasureRange(const ChartSlideContent& content) const;
-	Rect PlotArea(const Rect& area) const;
+	ValueRange MeasureSecondaryRange(const SecondaryAxisSeries& series) const;
+	Rect PlotArea(const Rect& area, bool hasSecondaryAxis) const;
 
 	double ProjectValue(double value, const ValueRange& range, const Rect& plot) const;
 
 	void PaintGrid(DrawList& target, const ValueRange& range, const Rect& plot, const std::string& suffix) const;
+	void PaintSecondaryAxisLabels(
+		DrawList& target,
+		const ValueRange& secondaryRange,
+		const Rect& plot,
+		const std::string& suffix) const;
 	void PaintCategories(DrawList& target, const ChartSlideContent& content, const Rect& plot) const;
 	void PaintBars(DrawList& target, const ChartSlideContent& content, const ValueRange& range, const Rect& plot) const;
+	void PaintLineSeries(
+		DrawList& target,
+		const std::vector<double>& values,
+		const Color& color,
+		const ValueRange& range,
+		const Rect& plot) const;
 	void PaintLine(DrawList& target, const ChartSlideContent& content, const ValueRange& range, const Rect& plot) const;
+	void PaintSecondaryOverlay(
+		DrawList& target,
+		const SecondaryAxisSeries& series,
+		const ValueRange& secondaryRange,
+		const Rect& plot,
+		std::size_t colorIndex) const;
 	void PaintLegend(DrawList& target, const ChartSlideContent& content, const Rect& area) const;
 
 	Color SeriesColor(std::size_t index) const;

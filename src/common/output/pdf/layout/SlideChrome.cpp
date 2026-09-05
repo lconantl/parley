@@ -50,6 +50,15 @@ Color FooterTextColor(const Theme& theme, const bool inverse)
 {
 	return inverse ? theme.palette.textInverse : theme.palette.text;
 }
+
+TextStyle SourceNoteStyle(const Theme& theme)
+{
+	TextStyle style = CaptionStyle(theme);
+	style.color = theme.palette.text;
+	style.align = TextAlign::Left;
+
+	return style;
+}
 } // namespace
 
 Rect SlideBounds(const Theme& theme)
@@ -123,4 +132,53 @@ double EmitSlideTitle(
 		theme.metrics.titleBlockHeight};
 
 	return EmitTextBlock(target, title, style, area, measurer);
+}
+
+void EmitSourceNote(
+	DrawList& target,
+	const std::string& note,
+	const Theme& theme,
+	const ITextMeasurer& measurer)
+{
+	if (note.empty())
+	{
+		return;
+	}
+
+	const TextStyle style = SourceNoteStyle(theme);
+
+	const Rect area = Rect{
+		theme.metrics.page.marginLeft,
+		theme.metrics.page.height - SOURCE_NOTE_BOTTOM,
+		ContentWidth(theme.metrics),
+		SOURCE_NOTE_HEIGHT};
+
+	EmitSingleLine(target, note, style, area, measurer);
+}
+
+void EmitTakeaway(
+	DrawList& target,
+	const std::string& takeaway,
+	const Theme& theme,
+	const Rect& area,
+	const ITextMeasurer& measurer)
+{
+	if (takeaway.empty())
+	{
+		return;
+	}
+
+	RectCommand panel;
+	panel.bounds = area;
+	panel.fill = theme.palette.ink;
+	panel.cornerRadius = theme.metrics.card.cornerRadius;
+
+	target.AddRect(panel);
+
+	TextStyle style = BodyInverseStyle(theme);
+	style.align = TextAlign::Left;
+
+	const Rect textArea = InsetRect(area, theme.metrics.card.padding);
+
+	EmitTextBlock(target, takeaway, style, textArea, measurer);
 }

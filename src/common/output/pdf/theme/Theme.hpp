@@ -32,6 +32,7 @@ struct Palette
 	Color accentSoft;
 	Color link;
 	Color violet;
+	Color danger;
 };
 
 struct GradientRamp
