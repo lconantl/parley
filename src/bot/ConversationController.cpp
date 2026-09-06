@@ -111,6 +111,12 @@ void ConversationController::HandleMessage(const TgBot::Message::Ptr& rawMessage
 
 		const ConversationSession session = m_conversations.Get(message.userId, message.chatId);
 
+		if (message.text == KeyboardFactory::StartButtonText)
+		{
+			RestartFlow(message.userId, message.chatId, message.messageId);
+			return;
+		}
+
 		if (session.step == ConversationStep::AwaitingInn)
 		{
 			OnInnCandidate(message);
@@ -288,7 +294,8 @@ void ConversationController::BeginProcessing(
 	}
 
 	MessageManager messages(&m_bot.getApi(), m_conversations, userId);
-	messages.SendText(chatId, StatusText);
+
+	messages.SendWithKeyboard(chatId, StatusText, KeyboardFactory::StartKeyboard());
 
 	m_workers.Post([this, userId, chatId, inn] { RunAnalysisJob(userId, chatId, inn); });
 }
@@ -310,6 +317,7 @@ void ConversationController::RunAnalysisJob(
 		MessageManager messages(&m_bot.getApi(), m_conversations, userId);
 		messages.SendText(chatId, std::string(FailureText) + ": " + error.what());
 		m_conversations.ResetToIdle(userId, chatId);
+		ShowWelcome(userId, chatId);
 		return;
 	}
 
@@ -318,6 +326,7 @@ void ConversationController::RunAnalysisJob(
 		MessageManager messages(&m_bot.getApi(), m_conversations, userId);
 		messages.SendText(chatId, NoDataText);
 		m_conversations.ResetToIdle(userId, chatId);
+		ShowWelcome(userId, chatId);
 		return;
 	}
 
@@ -355,6 +364,7 @@ void ConversationController::RunAnalysisJob(
 	if (jobs.empty())
 	{
 		m_conversations.ResetToIdle(userId, chatId);
+		ShowWelcome(userId, chatId);
 		return;
 	}
 
@@ -410,4 +420,5 @@ void ConversationController::RunAnalysisJob(
 	}
 
 	m_conversations.ResetToIdle(userId, chatId);
+	ShowWelcome(userId, chatId);
 }

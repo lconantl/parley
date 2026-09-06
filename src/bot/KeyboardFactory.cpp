@@ -46,3 +46,18 @@ TgBot::InlineKeyboardMarkup::Ptr KeyboardFactory::Empty()
 {
 	return std::make_shared<TgBot::InlineKeyboardMarkup>();
 }
+
+TgBot::ReplyKeyboardMarkup::Ptr KeyboardFactory::StartKeyboard()
+{
+	auto button = std::make_shared<TgBot::KeyboardButton>();
+	button->text = StartButtonText;
+
+	auto keyboard = std::make_shared<TgBot::ReplyKeyboardMarkup>();
+	keyboard->keyboard = {{button}};
+	keyboard->resizeKeyboard = true;
+	keyboard->oneTimeKeyboard = false;
+	keyboard->isPersistent = true;
+	keyboard->inputFieldPlaceholder = "Или пришлите ИНН";
+
+	return keyboard;
+}

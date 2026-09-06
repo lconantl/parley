@@ -20,7 +20,7 @@ public:
 	std::int32_t SendWithKeyboard(
 		std::int64_t chatId,
 		const std::string& text,
-		const TgBot::InlineKeyboardMarkup::Ptr& keyboard);
+		const TgBot::GenericReply::Ptr& keyboard);
 	void EditText(
 		std::int64_t chatId,
 		std::int32_t messageId,

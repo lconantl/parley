@@ -32,6 +32,14 @@ void AssertIsCurlResultValid(const CURLcode result)
 	}
 }
 
+void AssertIsHttpStatusValid(const long statusCode)
+{
+	if (statusCode < 200 || statusCode >= 300)
+	{
+		throw std::runtime_error("Сервер вернул ошибочный HTTP-код");
+	}
+}
+
 size_t WriteResponse(
 	const char* data,
 	const size_t size,

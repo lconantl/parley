@@ -326,3 +326,4 @@ OnePagerNarrative OnePagerNarrator::BuildFallback(const CompanyAnalytics& /*anal
 
 	return narrative;
 }
+

@@ -98,7 +98,7 @@ void MessageManager::SendText(const std::int64_t chatId, const std::string& text
 std::int32_t MessageManager::SendWithKeyboard(
 	const std::int64_t chatId,
 	const std::string& text,
-	const TgBot::InlineKeyboardMarkup::Ptr& keyboard)
+	const TgBot::GenericReply::Ptr& keyboard)
 {
 	const auto message = m_api->sendMessage(chatId, text, nullptr, nullptr, keyboard);
 	TrackMessage(chatId, message->messageId);
