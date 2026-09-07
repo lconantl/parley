@@ -54,6 +54,7 @@ MetricFormatOptions CreateFormatOptions()
 	options.showMissing = false;
 	options.showNotApplicable = false;
 	options.compactMoney = false;
+	options.moneyInMillions = true;
 
 	return options;
 }

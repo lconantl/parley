@@ -11,6 +11,7 @@ struct MetricFormatOptions
 	bool showMissing = true;
 	bool showNotApplicable = true;
 	bool compactMoney = false;
+	bool moneyInMillions = false;
 	std::string missingText = "нет данных";
 };
 
@@ -29,6 +30,7 @@ public:
 	std::string FormatFull(const MetricValue& metric, MetricUnit unit) const;
 
 	static std::string FormatMoney(double value, bool compact);
+	static std::string FormatMoneyInMillions(double value);
 	static std::string FormatNumber(double value, int decimals);
 
 private:

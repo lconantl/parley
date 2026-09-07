@@ -6,6 +6,7 @@
 #include "common/output/pdf/theme/TextStyles.hpp"
 
 #include <algorithm>
+#include <cctype>
 
 namespace
 {
@@ -18,6 +19,8 @@ constexpr double SubtitleToRuleGap = 14.0;
 constexpr double HeroRuleThickness = 1.0;
 constexpr double RuleToBodyGap = 18.0;
 constexpr double HeadlineWidthFraction = 0.86;
+constexpr std::size_t ShortHeadlineMaxWords = 6;
+constexpr double ShortHeadlineFontScale = 0.7;
 
 constexpr double ValuationColumnFraction = 0.30;
 constexpr double KpiToMixGap = 14.0;
@@ -57,6 +60,25 @@ double LocalColumnWidth(const double containerWidth, const int columnCount, cons
 double LocalColumnOffset(const double containerLeft, const double columnWidth, const double gap, const int columnIndex)
 {
 	return containerLeft + (columnWidth + gap) * static_cast<double>(columnIndex);
+}
+
+std::size_t CountWords(const std::string& text)
+{
+	std::size_t count = 0;
+	bool insideWord = false;
+
+	for (const char character : text)
+	{
+		const bool isSpace = std::isspace(static_cast<unsigned char>(character)) != 0;
+		if (!isSpace && !insideWord)
+		{
+			++count;
+		}
+
+		insideWord = !isSpace;
+	}
+
+	return count;
 }
 
 std::string JoinValueCreationSteps(const std::vector<std::string>& steps)
@@ -99,7 +121,14 @@ Rect OnePagerLayout::PaintHero(
 
 	Rect cursor = DropTop(area, eyebrowStyle.lineHeight + EyebrowToHeadlineGap);
 
-	const TextStyle headlineStyle = SlideTitleStyle(m_theme);
+	TextStyle headlineStyle = SlideTitleStyle(m_theme);
+	const std::size_t headlineWordCount = CountWords(content.headline);
+	if (headlineWordCount >= 1 && headlineWordCount <= ShortHeadlineMaxWords)
+	{
+		headlineStyle.fontSize *= ShortHeadlineFontScale;
+		headlineStyle.lineHeight = headlineStyle.fontSize * m_theme.type.lineHeightFactor;
+	}
+
 	const double headlineWidth = area.width * HeadlineWidthFraction;
 	const double headlineHeight = MeasureTextHeight(content.headline, headlineStyle, headlineWidth, m_measurer);
 

@@ -40,6 +40,7 @@ PdfDocument::PdfDocument()
 
 	HPDF_UseUTFEncodings(m_pdf);
 	HPDF_SetCurrentEncoder(m_pdf, "UTF-8");
+	HPDF_SetCompressionMode(m_pdf, HPDF_COMP_ALL);
 }
 
 PdfDocument::~PdfDocument()

@@ -77,6 +77,7 @@ std::string BuildFileName(const CompanyAnalytics& analytics, const bool anonymiz
 MetricFormatOptions MakeCompactOptions(MetricFormatOptions options)
 {
 	options.compactMoney = true;
+	options.moneyInMillions = false;
 
 	return options;
 }

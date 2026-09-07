@@ -364,9 +364,7 @@ Slide DueDiligenceDeckBuilder::BuildCompetitors(
 		Percent(analytics.margins.netMargin),
 		Money(analytics.valuation.marketCapitalization)});
 
-	const std::vector<Competitor> competitors = m_options.anonymize
-		? CompanyAnonymizer::MaskCompetitors(analytics.competitors)
-		: analytics.competitors;
+	const std::vector<Competitor>& competitors = analytics.competitors;
 
 	for (const auto& competitor : competitors)
 	{
@@ -517,7 +515,7 @@ Deck DueDiligenceDeckBuilder::Build(
 	deck.slides.push_back(BuildOpportunities(narrative));
 	deck.slides.push_back(BuildValuation(analytics, narrative));
 	deck.slides.push_back(BuildOpenQuestions(analytics, narrative));
-	deck.slides.push_back(BuildConclusion(narrative));
+	// deck.slides.push_back(BuildConclusion(narrative));
 
 	return deck;
 }

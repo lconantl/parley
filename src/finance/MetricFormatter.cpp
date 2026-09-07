@@ -79,12 +79,14 @@ std::string FormatCompactMoney(const double value)
 	return BuildFixed(value, DefaultDecimals) + " руб.";
 }
 
-std::string FormatByUnit(const double value, const MetricUnit unit, const bool compactMoney)
+std::string FormatByUnit(const double value, const MetricUnit unit, const bool compactMoney, const bool moneyInMillions)
 {
 	switch (unit)
 	{
 	case MetricUnit::Money:
-		return MetricFormatter::FormatMoney(value, compactMoney);
+		return moneyInMillions
+			? MetricFormatter::FormatMoneyInMillions(value)
+			: MetricFormatter::FormatMoney(value, compactMoney);
 	case MetricUnit::Percent:
 		return MetricFormatter::FormatNumber(value, PercentDecimals) + " %";
 	case MetricUnit::Ratio:
@@ -141,6 +143,11 @@ std::string MetricFormatter::FormatMoney(const double value, const bool compact)
 	return InsertGroupSeparators(BuildFixed(value, DefaultDecimals)) + " ₽";
 }
 
+std::string MetricFormatter::FormatMoneyInMillions(const double value)
+{
+	return InsertGroupSeparators(BuildFixed(value / Million, DefaultDecimals)) + " млн ₽";
+}
+
 std::string MetricFormatter::FormatNumber(const double value, const int decimals)
 {
 	return InsertGroupSeparators(BuildFixed(value, decimals));
@@ -158,7 +165,7 @@ std::string MetricFormatter::FormatValue(const MetricValue& metric, const Metric
 		return m_options.missingText;
 	}
 
-	return FormatByUnit(metric.value, unit, m_options.compactMoney);
+	return FormatByUnit(metric.value, unit, m_options.compactMoney, m_options.moneyInMillions);
 }
 
 std::string MetricFormatter::FormatOrigin(const MetricValue& metric) const

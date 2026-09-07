@@ -7,7 +7,7 @@
 #include <string>
 #include <string_view>
 
-constexpr double SOURCE_NOTE_BOTTOM = 34.0;
+constexpr double SOURCE_NOTE_BOTTOM = 44.0;
 constexpr double SOURCE_NOTE_HEIGHT = 16.0;
 
 Rect SlideBounds(const Theme& theme);
