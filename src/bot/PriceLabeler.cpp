@@ -4,12 +4,12 @@
 
 namespace
 {
-constexpr int ReportMin = 90;
-constexpr int ReportMax = 120;
-constexpr int PresentationMin = 120;
-constexpr int PresentationMax = 250;
-constexpr int OnePagerMin = 120;
-constexpr int OnePagerMax = 200;
+constexpr int ReportMin = 50;
+constexpr int ReportMax = 90;
+constexpr int PresentationMin = 90;
+constexpr int PresentationMax = 120;
+constexpr int OnePagerMin = 85;
+constexpr int OnePagerMax = 132;
 
 std::mt19937& RandomEngine()
 {
