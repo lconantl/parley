@@ -1,6 +1,7 @@
 #pragma once
 
 #include "application/search/ContactSearchService/ContactSearchService.hpp"
+#include "bot/ChatSequencer/ChatSequencer.hpp"
 #include "bot/access/AccessPolicy.hpp"
 #include "infrastructure/pool/WorkerPool.hpp"
 
@@ -29,4 +30,5 @@ private:
 	AccessPolicy m_accessPolicy;
 	std::shared_ptr<ContactSearchService> m_searchService;
 	mutable WorkerPool m_workers;
+	mutable ChatSequencer m_sequencer;
 };

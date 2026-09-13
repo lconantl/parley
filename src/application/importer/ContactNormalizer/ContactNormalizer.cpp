@@ -55,6 +55,11 @@ std::string ContactNormalizer::NormalizePhone(const std::string& rawPhone)
 		return "";
 	}
 
+	if (digits.size() > 11 && digits.starts_with("00"))
+	{
+		digits = digits.substr(2);
+	}
+
 	if (digits.size() == 11 && (digits.front() == '8' || digits.front() == '7'))
 	{
 		digits = "7" + digits.substr(1);

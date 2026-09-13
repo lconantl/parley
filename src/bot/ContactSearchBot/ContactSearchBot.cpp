@@ -1,5 +1,6 @@
 #include "ContactSearchBot.hpp"
 #include "application/search/ContactResultFormatter/ContactResultFormatter.hpp"
+#include "bot/TypingIndicator/TypingIndicator.hpp"
 
 #include <iostream>
 #include <stdexcept>
@@ -31,6 +32,7 @@ ContactSearchBot::ContactSearchBot(
 	, m_accessPolicy(std::move(accessPolicy))
 	, m_searchService(std::move(searchService))
 	, m_workers(WorkerPool::SuggestThreadCount())
+	, m_sequencer(m_workers)
 {
 	SubscribeToMessages();
 }
@@ -82,9 +84,10 @@ void ContactSearchBot::HandleQuery(const std::int64_t chatId, const std::string&
 	const TgBot::Api* api = &m_bot.getApi();
 	const std::shared_ptr<ContactSearchService> searchService = m_searchService;
 
-	m_workers.Post([api, searchService, chatId, text] {
+	m_sequencer.Enqueue(chatId, [api, searchService, chatId, text] {
 		try
 		{
+			const TypingIndicator typing(api, chatId);
 			const std::vector<SearchResult> results = searchService->Search(text);
 			api->sendMessage(chatId, ContactResultFormatter::Format(results));
 		}

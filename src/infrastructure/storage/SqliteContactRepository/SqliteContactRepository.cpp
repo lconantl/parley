@@ -1,11 +1,74 @@
 #include "SqliteContactRepository.hpp"
 #include "infrastructure/storage/SqliteStatement/SqliteStatement.hpp"
 
+#include <algorithm>
 #include <cctype>
 #include <stdexcept>
 
 namespace
 {
+constexpr std::size_t MinStemCodepoints = 4;
+
+std::size_t Utf8CodepointLength(const unsigned char leadByte)
+{
+	if ((leadByte & 0xE0) == 0xC0)
+	{
+		return 2;
+	}
+	if ((leadByte & 0xF0) == 0xE0)
+	{
+		return 3;
+	}
+	if ((leadByte & 0xF8) == 0xF0)
+	{
+		return 4;
+	}
+
+	return 1;
+}
+
+std::size_t Utf8CodepointCount(const std::string& text)
+{
+	std::size_t count = 0;
+	std::size_t i = 0;
+	while (i < text.size())
+	{
+		i += Utf8CodepointLength(static_cast<unsigned char>(text[i]));
+		++count;
+	}
+
+	return count;
+}
+
+std::string TruncateUtf8ToCodepoints(const std::string& text, const std::size_t maxCodepoints)
+{
+	std::string result;
+	std::size_t codepointCount = 0;
+	std::size_t i = 0;
+
+	while (i < text.size() && codepointCount < maxCodepoints)
+	{
+		const std::size_t length = std::min(Utf8CodepointLength(static_cast<unsigned char>(text[i])), text.size() - i);
+		result.append(text, i, length);
+		i += length;
+		++codepointCount;
+	}
+
+	return result;
+}
+
+std::string ToStemPrefix(const std::string& token)
+{
+	const std::size_t codepoints = Utf8CodepointCount(token);
+	if (codepoints <= MinStemCodepoints)
+	{
+		return token;
+	}
+
+	const std::size_t stemLength = std::max(MinStemCodepoints, codepoints * 2 / 3);
+	return TruncateUtf8ToCodepoints(token, stemLength);
+}
+
 void AppendTokens(std::vector<std::string>& tokens, const std::string& text)
 {
 	std::string current;
@@ -80,7 +143,7 @@ std::string BuildMatchQuery(const SearchCriteria& criteria)
 		{
 			query += " OR ";
 		}
-		query += "\"" + sanitized + "\"";
+		query += ToStemPrefix(sanitized) + "*";
 	}
 
 	return query;
