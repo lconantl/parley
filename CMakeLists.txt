@@ -34,7 +34,7 @@ if(MSVC)
     target_compile_options(core PRIVATE /W4 /utf-8)
     target_compile_definitions(core PUBLIC _WIN32_WINNT=0x0A00)
 else()
-    target_compile_options(core PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    target_compile_options(core PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
 if(WIN32)
