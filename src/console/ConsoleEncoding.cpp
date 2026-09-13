@@ -74,7 +74,7 @@ ConsoleEncoding::~ConsoleEncoding() noexcept
 ConsoleEncoding::ConsoleEncoding()
 	: m_previousLocale(SaveCurrentLocale())
 {
-	AssertIsEncodingSet(TrySetUtf8Locale());
+	ApplyFirstAvailableUtf8Locale();
 }
 
 ConsoleEncoding::~ConsoleEncoding() noexcept
