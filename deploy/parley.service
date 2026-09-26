@@ -1,0 +1,22 @@
+[Unit]
+Description=Parley matching Telegram bot
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=120
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=parley
+Group=parley
+WorkingDirectory=/opt/parley
+ExecStart=/opt/parley/build/parley --env /opt/parley/.env
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=45
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
