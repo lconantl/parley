@@ -1,13 +1,5 @@
 {
   "name": "parley",
-  "version": "1.0.0",
-  "dependencies": [
-    "nlohmann-json",
-    {
-      "name": "cpp-httplib",
-      "features": [
-        "openssl"
-      ]
-    }
-  ]
+  "version-string": "2.0.0",
+  "dependencies": ["curl", "sqlite3", "nlohmann-json", "gtest"]
 }
