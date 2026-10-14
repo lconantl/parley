@@ -1,6 +1,8 @@
-cmake-build-release
-cmake-build-debug
-
+/build*/
+/.env
+/data/*.lock
+/data/*-journal
+/data/*-wal
+/data/*-shm
+/data/matches.sqlite3
 res
-
-.env
